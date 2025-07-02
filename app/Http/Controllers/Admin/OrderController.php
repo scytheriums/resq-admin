@@ -91,7 +91,7 @@ class OrderController extends Controller
     public function update(Request $request, Order $order)
     {
         $request->validate([
-            'driver_id' => 'nullable|exists:drivers,id',
+            'driver_id' => 'required|exists:drivers,id',
             'additional_services' => 'nullable|array',
             'additional_services.*' => 'exists:additional_services,id'
         ]);
