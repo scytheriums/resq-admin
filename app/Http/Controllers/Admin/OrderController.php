@@ -18,7 +18,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $orders = Order::query()->with(['user', 'driver', 'ambulanceType', 'purpose']);
+            $orders = Order::query()->with(['user', 'driver', 'ambulanceType', 'purpose', 'review']);
             return DataTables::of($orders)
                 ->addIndexColumn()
                 ->addColumn('action', function ($data) {
@@ -78,7 +78,7 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
-        $order->load(['user', 'driver', 'ambulanceType', 'purpose', 'additionalServices']);
+        $order->load(['user', 'driver', 'ambulanceType', 'purpose', 'additionalServices', 'review']);
         $title = 'Detail Pesanan #' . $order->order_number;
         
         // Get available drivers and additional services
@@ -145,5 +145,11 @@ class OrderController extends Controller
         $order->push();
         
         return redirect()->route('admin.orders.index')->with('success', 'Pesanan berhasil diselesaikan.');
+    }
+
+    public function deleteReview(Order $order)
+    {
+        $order->review()->delete();
+        return redirect()->back()->with('success', 'Ulasan berhasil dihapus.');
     }
 }

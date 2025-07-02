@@ -19,53 +19,51 @@
                 <span class="d-none d-sm-inline-block">Tambah Peran</span>
             </a>
         </div>
-        <div class="card-body">
-            @if (session('success'))
-                <div class="alert alert-success alert-dismissible" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-             @if (session('error'))
-                <div class="alert alert-danger alert-dismissible" role="alert">
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-            
-            <div class="table-responsive">
-                <table class="table" id="datatable">
-                    <thead>
-                        <tr>
-                            <th>Nama</th>
-                            <th>Jumlah Pengguna</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($roles as $role)
-                            <tr>
-                                <td>{{ $role->name }}</td>
-                                <td>{{ $role->users_count }}</td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <a href="{{ route('admin.roles.edit', $role->id) }}" class="text-body">
-                                            <i class="ti ti-edit ti-sm me-2"></i>
-                                        </a>
-                                        <a href="#" class="text-body delete-record btn-delete" 
-                                           data-bs-toggle="modal" 
-                                           data-bs-target="#deleteModal" 
-                                           data-url="{{ route('admin.roles.destroy', $role->id) }}" 
-                                           data-name="{{ $role->name }}">
-                                            <i class="ti ti-trash ti-sm mx-2"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
+        @endif
+            @if (session('error'))
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        
+        <div class="table-responsive card-datatable">
+            <table class="table" id="datatable">
+                <thead>
+                    <tr>
+                        <th>Nama</th>
+                        <th width="10%">Jumlah Pengguna</th>
+                        <th width="15%">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($roles as $role)
+                        <tr>
+                            <td>{{ $role->name }}</td>
+                            <td>{{ $role->users_count }}</td>
+                            <td width="15%">
+                                <div class="d-flex align-items-center">
+                                    <a href="{{ route('admin.roles.edit', $role->id) }}" class="text-body">
+                                        <i class="ti ti-edit ti-sm me-2"></i>
+                                    </a>
+                                    <a href="#" class="text-body delete-record btn-delete" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#deleteModal" 
+                                        data-url="{{ route('admin.roles.destroy', $role->id) }}" 
+                                        data-name="{{ $role->name }}">
+                                        <i class="ti ti-trash ti-sm mx-2"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

@@ -14,7 +14,8 @@ class RoleController extends Controller
     public function index()
     {
         $roles = Role::withCount('users')->latest()->paginate(10);
-        return view('admin.roles.index', compact('roles'));
+        $title = 'Roles';
+        return view('admin.roles.index', compact('roles', 'title'));
     }
 
     public function create()
@@ -22,7 +23,8 @@ class RoleController extends Controller
         $permissions = Permission::all()->groupBy(function ($permission) {
             return explode('-', $permission->slug)[0];
         });
-        return view('admin.roles.create', compact('permissions'));
+        $title = 'Create Role';
+        return view('admin.roles.create', compact('permissions', 'title'));
     }
 
     public function store(Request $request)
@@ -49,7 +51,8 @@ class RoleController extends Controller
             return explode('-', $permission->slug)[0];
         });
         $role->load('permissions');
-        return view('admin.roles.edit', compact('role', 'permissions'));
+        $title = 'Edit Role';
+        return view('admin.roles.edit', compact('role', 'permissions', 'title'));
     }
 
     public function update(Request $request, Role $role)

@@ -20,6 +20,7 @@ Route::middleware(['auth', 'web'])->prefix('admin')->name('admin.')->group(funct
     // Orders Management
     Route::resource('orders', OrderController::class);
     Route::get('orders/{order}/complete', [OrderController::class, 'complete'])->name('orders.complete');
+    Route::delete('orders/{order}/review/delete', [OrderController::class, 'deleteReview'])->name('orders.review.delete');
     
     // Drivers Management
     Route::resource('drivers', DriverController::class);

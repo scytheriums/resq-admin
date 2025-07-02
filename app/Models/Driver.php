@@ -42,4 +42,11 @@ class Driver extends Model
     {
         return $query->where('is_available', false);
     }
+
+    public function scopeIsOnDuty($query)
+    {
+        return $query->whereHas('orders', function ($query) {
+            $query->whereIn('order_status', ['assigned_to_driver', 'in_progress_pickup', 'in_progress_deliver', 'confirmed']);
+        });
+    }
 }

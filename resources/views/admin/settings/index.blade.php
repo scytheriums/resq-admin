@@ -21,40 +21,38 @@
                 </a>
             </div>
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table" id="settings-table">
-                    <thead>
+        <div class="table-responsive card-datatable">
+            <table class="table" id="settings-table">
+                <thead>
+                    <tr>
+                        <th>Kunci</th>
+                        <th>Nilai</th>
+                        <th>Deskripsi</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($settings as $setting)
                         <tr>
-                            <th>Kunci</th>
-                            <th>Nilai</th>
-                            <th>Deskripsi</th>
-                            <th>Aksi</th>
+                            <td>{{ $setting->getAttributes()['key'] }}</td>
+                            <td>{{ $setting->value }}</td>
+                            <td>{{ $setting->description }}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <a href="{{ route('admin.settings.edit', $setting->getAttributes()['key']) }}" class="text-body">
+                                        <i class="ti ti-edit ti-sm me-2"></i>
+                                    </a>
+                                    <a href="" class="text-body delete-record btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="{{ route('admin.settings.destroy', $setting->getAttributes()['key']) }}" data-name="{{ $setting->getAttributes()['key'] }}"> <i class="ti ti-trash ti-sm mx-2"></i></a>
+                                </div>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($settings as $setting)
-                            <tr>
-                                <td>{{ $setting->getAttributes()['key'] }}</td>
-                                <td>{{ $setting->value }}</td>
-                                <td>{{ $setting->description }}</td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <a href="{{ route('admin.settings.edit', $setting->getAttributes()['key']) }}" class="text-body">
-                                            <i class="ti ti-edit ti-sm me-2"></i>
-                                        </a>
-                                        <a href="" class="text-body delete-record btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="{{ route('admin.settings.destroy', $setting->getAttributes()['key']) }}" data-name="{{ $setting->getAttributes()['key'] }}"> <i class="ti ti-trash ti-sm mx-2"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="text-center">Tidak ada data pengaturan. <a href="{{ route('admin.settings.create') }}">Buat baru</a>.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="text-center">Tidak ada data pengaturan. <a href="{{ route('admin.settings.create') }}">Buat baru</a>.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

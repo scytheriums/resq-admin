@@ -19,53 +19,50 @@
                 <span class="d-none d-sm-inline-block">Tambah Hak Akses</span>
             </a>
         </div>
-        <div class="card-body">
-            @if (session('success'))
-                <div class="alert alert-success alert-dismissible" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-             @if (session('error'))
-                <div class="alert alert-danger alert-dismissible" role="alert">
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-            
-            <div class="table-responsive">
-                <table class="table" id="datatable">
-                    <thead>
-                        <tr>
-                            <th>Nama</th>
-                            <th>Slug</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($permissions as $permission)
-                            <tr>
-                                <td>{{ $permission->name }}</td>
-                                <td>{{ $permission->slug }}</td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <a href="{{ route('admin.permissions.edit', $permission->id) }}" class="text-body">
-                                            <i class="ti ti-edit ti-sm me-2"></i>
-                                        </a>
-                                        <a href="#" class="text-body delete-record btn-delete" 
-                                           data-bs-toggle="modal" 
-                                           data-bs-target="#deleteModal" 
-                                           data-url="{{ route('admin.permissions.destroy', $permission->id) }}" 
-                                           data-name="{{ $permission->name }}">
-                                            <i class="ti ti-trash ti-sm mx-2"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        <div class="table-responsive card-datatable">
+            <table class="table" id="datatable">
+                <thead>
+                    <tr>
+                        <th>Nama</th>
+                        <th>Slug</th>
+                        <th width="10%">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($permissions as $permission)
+                        <tr>
+                            <td>{{ $permission->name }}</td>
+                            <td>{{ $permission->slug }}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <a href="{{ route('admin.permissions.edit', $permission->id) }}" class="text-body">
+                                        <i class="ti ti-edit ti-sm me-2"></i>
+                                    </a>
+                                    <a href="#" class="text-body delete-record btn-delete" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#deleteModal" 
+                                    data-url="{{ route('admin.permissions.destroy', $permission->id) }}" 
+                                    data-name="{{ $permission->name }}">
+                                        <i class="ti ti-trash ti-sm mx-2"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

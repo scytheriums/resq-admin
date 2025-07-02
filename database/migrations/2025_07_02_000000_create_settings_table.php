@@ -8,12 +8,14 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('app_config', function (Blueprint $table) {
-            $table->string('key')->unique();
-            $table->text('value')->nullable();
-            $table->text('description')->nullable();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('app_config')) {
+            Schema::create('app_config', function (Blueprint $table) {
+                $table->string('key')->unique();
+                $table->text('value')->nullable();
+                $table->text('description')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     public function down()

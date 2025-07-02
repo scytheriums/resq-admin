@@ -17,7 +17,8 @@ class DestinationController extends Controller
             return DataTables::of($destinations)
                 ->addIndexColumn()
                 ->addColumn('action', function ($data) {
-                    $edit = '<a class="text-body" href="' . route('admin.destinations.edit', $data->id) . '"><i class="ti ti-edit ti-sm me-2"></i></a>';
+                    $edit = '';
+                    // $edit = '<a class="text-body" href="' . route('admin.destinations.edit', $data->id) . '"><i class="ti ti-edit ti-sm me-2"></i></a>';
                     $delete = '<a href="" class="text-body delete-record btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="' . route('admin.destinations.destroy', $data->id) . '" data-name="' . $data->name . '"> <i class="ti ti-trash ti-sm mx-2"></i></a>';
                     return ' <div class="d-flex align-items-center">
                                 ' . $edit . '

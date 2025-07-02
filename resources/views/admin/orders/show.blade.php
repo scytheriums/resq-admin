@@ -70,6 +70,66 @@
     <div class="row">
         <!-- Left Column -->
         <div class="col-lg-7 col-xl-8">
+
+            {{-- Review Section --}}
+            @if ($order->review)
+                <div class="modal fade modal-danger" id="deleteCommentModal" tabindex="-1" aria-labelledby="deleteModalTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-transparent">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                        </div>
+                        <div class="modal-body px-sm-5 mx-50 pb-5">
+                        <h5 class="text-center mb-1" id="deleteModalTitle">Apakah Anda Yakin Menghapus Ulasan?</h5>
+                        <div class="text-center mt-2">
+                            Apakah Anda yakin ingin menghapus ulasan ini ? 
+                            <br>
+                            Tindakan ini tidak dapat dibatalkan.
+                        </div>
+                
+                        <form class="row gy-1 gx-2 mt-75" method="post" action="{{ route('admin.orders.review.delete', $order->id) }}">
+                            @method('DELETE')
+                            @csrf
+                            <div class="col-12 text-center">
+                            <button type="reset" class="btn btn-outline-secondary mt-1" data-bs-dismiss="modal" aria-label="Batal">Batal</button>
+                            <button type="submit" class="btn btn-danger me-1 mt-1 btn-confirm-delete">Hapus</button>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                @php
+                    $rating = $order->review->rating;
+                    $colorClass = 'alert-secondary'; // Default
+                    if ($rating <= 1) $colorClass = 'alert-danger';
+                    else if ($rating == 2) $colorClass = 'alert-warning';
+                    else if ($rating == 3) $colorClass = 'alert-info';
+                    else if ($rating == 4) $colorClass = 'alert-success';
+                    else if ($rating >= 5) $colorClass = 'alert-success';
+                @endphp
+                <div class="alert {{ $colorClass }}" role="alert">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h5 class="alert-heading">Ulasan & Rating</h5>
+                        <button 
+                            type="button" class="btn btn-icon btn-outline-danger" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#deleteCommentModal" 
+                        > 
+                            <i class="ti ti-trash ti-sm mx-2"></i>
+                        </button>
+                    </div>
+                    <div class="d-flex align-items-center mb-2">
+                        @for ($i = 1; $i <= 5; $i++)
+                            <i class="ti ti-star-filled {{ $i <= $rating ? 'text-warning' : 'text-secondary' }}"></i>
+                        @endfor
+                        <span class="ms-2 fw-bold">({{ $rating }}/5)</span>
+                    </div>
+                    <p class="mb-0">{{ $order->review->comment }}</p>
+                    <hr>
+                    <p class="mb-0 small text-muted">Diulas oleh {{ $order->user->name }} pada {{ $order->review->created_at->translatedFormat('d F Y, H:i') }}</p>
+                </div>
+            @endif
             <!-- Order & Customer Details -->
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">

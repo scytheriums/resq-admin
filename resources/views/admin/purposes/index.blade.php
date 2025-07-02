@@ -27,20 +27,18 @@
                 </a>
             </div>
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table" id="purposes-table">
-                    <thead>
-                        <tr>
-                            <th width="7%">#</th>
-                            <th>Name</th>
-                            <th>Tarif</th>
-                            <th width="10%">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
+        <div class="table-responsive card-datatable">
+            <table class="table" id="purposes-table">
+                <thead>
+                    <tr>
+                        <th width="7%">#</th>
+                        <th>Name</th>
+                        <th>Tarif</th>
+                        <th width="10%">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
     </div>
 </div>

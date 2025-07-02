@@ -27,7 +27,7 @@
 
                 <div class="row">
                     <label class="form-label">Hak Akses</label>
-                    @foreach($permissionGroups as $group => $permissions)
+                    @foreach($permissions as $group => $x)
                         <div class="col-12 mb-3">
                             <div class="card">
                                 <div class="card-header">
@@ -35,7 +35,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        @foreach($permissions as $permission)
+                                        @foreach($x as $permission)
                                             <div class="col-md-3">
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $permission->id }}" id="permission_{{ $permission->id }}" {{ in_array($permission->id, old('permissions', [])) ? 'checked' : '' }}>

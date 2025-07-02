@@ -19,23 +19,22 @@
         <div class="card-header">
             <h5 class="card-title">Daftar Pesanan</h5>
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table" id="orders-table">
-                    <thead>
-                        <tr>
-                            <th width="7%">#</th>
-                            <th>No. Pesanan</th>
-                            <th>Pelanggan</th>
-                            <th>Driver</th>
-                            <th>Status</th>
-                            <th>Pembayaran</th>
-                            <th width="10%">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
+        <div class="table-responsive card-datatable">
+            <table class="table" id="orders-table">
+                <thead>
+                    <tr>
+                        <th width="7%">#</th>
+                        <th>No. Pesanan</th>
+                        <th>Pelanggan</th>
+                        <th>Driver</th>
+                        <th>Status</th>
+                        <th>Pembayaran</th>
+                        <th>Review</th>
+                        <th width="10%">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -63,6 +62,7 @@
                     { data: 'driver', name: 'driver.name' },
                     { data: 'order_status', className: 'text-center' },
                     { data: 'payment_status', className: 'text-center' },
+                    { data: 'review.rating', className: 'text-center', defaultContent: 'N/A' },
                     { 
                         data: 'action',
                         className: 'text-center',

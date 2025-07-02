@@ -20,27 +20,19 @@
     <div class="card">
         <div class="card-header">
             <h5 class="card-title">Daftar Destinasi</h5>
-            <div class="d-flex justify-content-end">
-                <a href="{{ route('admin.destinations.create') }}" class="btn btn-primary">
-                    <i class="bx bx-plus me-sm-2"></i>
-                    <span class="d-none d-sm-inline-block">Tambah Destinasi</span>
-                </a>
-            </div>
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table" id="destinations-table">
-                    <thead>
-                        <tr>
-                            <th width="7%">#</th>
-                            <th>Nama</th>
-                            <th>Alamat</th>
-                            <th width="10%">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
+        <div class="table-responsive card-datatable">
+            <table class="table" id="destinations-table">
+                <thead>
+                    <tr>
+                        <th width="7%">#</th>
+                        <th>Nama</th>
+                        <th>Alamat</th>
+                        <th width="10%">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
     </div>
 </div>

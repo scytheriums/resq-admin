@@ -164,4 +164,9 @@ class Order extends Model
         return $this->belongsToMany(AdditionalService::class, 'order_additional_services', 'order_id', 'service_id')
             ->withPivot('price');
     }
+
+    public function review() 
+    {
+        return $this->hasOne(Review::class);
+    }
 }

@@ -12,13 +12,15 @@ class PermissionController extends Controller
 {
     public function index()
     {
-        $permissions = Permission::latest()->paginate(10);
-        return view('admin.permissions.index', compact('permissions'));
+        $permissions = Permission::latest()->get();
+        $title = 'Permissions';
+        return view('admin.permissions.index', compact('permissions', 'title'));
     }
 
     public function create()
     {
-        return view('admin.permissions.create');
+        $title = 'Tambah Permission';
+        return view('admin.permissions.create', compact('title'));
     }
 
     public function store(Request $request)
@@ -37,7 +39,8 @@ class PermissionController extends Controller
 
     public function edit(Permission $permission)
     {
-        return view('admin.permissions.edit', compact('permission'));
+        $title = 'Ubah Permission';
+        return view('admin.permissions.edit', compact('permission', 'title'));
     }
 
     public function update(Request $request, Permission $permission)

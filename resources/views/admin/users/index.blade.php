@@ -19,8 +19,7 @@
                 <span class="d-none d-sm-inline-block">Tambah Pengguna</span>
             </a>
         </div>
-        <div class="card-body">
-            @if (session('success'))
+        @if (session('success'))
                 <div class="alert alert-success alert-dismissible" role="alert">
                     {{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -33,14 +32,14 @@
                 </div>
             @endif
             
-            <div class="table-responsive">
+            <div class="table-responsive card-datatable">
                 <table class="table" id="datatable">
                     <thead>
                         <tr>
                             <th>Nama</th>
                             <th>Email</th>
-                            <th>Peran</th>
-                            <th>Aksi</th>
+                            <th class="text-center">Peran</th>
+                            <th width="10%" class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -48,13 +47,13 @@
                             <tr>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
-                                <td>
+                                <td class="text-center">
                                     @foreach ($user->roles as $role)
                                         <span class="badge bg-primary">{{ $role->name }}</span>
                                     @endforeach
                                 </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
+                                <td class="text-center">
+                                    <div class="d-flex align-items-center justify-content-center">
                                         <a href="{{ route('admin.users.edit', $user->id) }}" class="text-body">
                                             <i class="ti ti-edit ti-sm me-2"></i>
                                         </a>
@@ -72,7 +71,6 @@
                     </tbody>
                 </table>
             </div>
-        </div>
     </div>
 </div>
 @include('components.delete-modal')

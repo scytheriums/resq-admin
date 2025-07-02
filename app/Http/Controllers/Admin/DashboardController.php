@@ -26,12 +26,9 @@ class DashboardController extends Controller
         for ($i = 0; $i < 7; $i++) {
             $date = Carbon::now()->subDays(6 - $i);
             $count = Order::whereDate('created_at', $date)->count();
-            $orderTrend[] = [
-                'date' => $date->format('Y-m-d'),
-                'count' => $count
-            ];
+            $orderTrend['data'][] = $count;
+            $orderTrend['categories'][] = $date->format('d F');
         }
-
         // Get recent orders
         $recentOrders = Order::with(['user', 'driver', 'ambulanceType', 'purpose'])
             ->whereIn('order_status', ['created', 'booked'])
@@ -42,6 +39,7 @@ class DashboardController extends Controller
         // Get driver status
         $driverStatus = [
             'available' => Driver::isAvailable()->count(),
+            'on_duty' => Driver::isOnDuty()->count(),
             'unavailable' => Driver::isUnavailable()->count()
         ];
 

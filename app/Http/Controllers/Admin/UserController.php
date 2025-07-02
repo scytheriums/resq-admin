@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+
 class UserController extends Controller
 {
     /**
@@ -15,8 +17,8 @@ class UserController extends Controller
     public function index()
     {
         $users = User::with('roles')->latest()->paginate(10);
-        // The view admin.users.index does not exist yet. We will create it later.
-        return view('admin.users.index', compact('users'));
+        $title = 'Daftar Pengguna';
+        return view('admin.users.index', compact('users', 'title'));
     }
 
     /**
@@ -24,9 +26,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::all();
-        // The view admin.users.create does not exist yet. We will create it later.
-        return view('admin.users.create', compact('roles'));
+        $roles = DB::table('roles')->select('id', 'name', 'slug')->get();
+        $title = 'Tambah Pengguna';
+        return view('admin.users.create', compact('roles', 'title'));
     }
 
     /**
@@ -60,8 +62,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        // The view admin.users.show does not exist yet. We will create it later.
-        return view('admin.users.show', compact('user'));
+        $title = 'Detail Pengguna';
+        return view('admin.users.show', compact('user', 'title'));
     }
 
     /**
@@ -69,9 +71,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $roles = Role::all();
-        // The view admin.users.edit does not exist yet. We will create it later.
-        return view('admin.users.edit', compact('user', 'roles'));
+        $roles = DB::table('roles')->select('id', 'name', 'slug')->get();
+        $title = 'Ubah Pengguna';
+        return view('admin.users.edit', compact('user', 'roles', 'title'));
     }
 
     /**

@@ -25,25 +25,23 @@
                 </a>
             </div>
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table" id="ambulance-types-table">
-                    <thead>
-                        <tr>
-                            <th rowspan="2" width="7%">#</th>
-                            <th rowspan="2">Name</th>
-                            <th class="text-center" colspan="3">Tarif</th>
-                            <th rowspan="2" width="10%">Actions</th>
-                        </tr>
-                        <tr>
-                            <th>dalam kota</th>
-                            <th>/KM luar kota</th>
-                            <th>/KM luar provinsi</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
+        <div class="table-responsive card-datatable">
+            <table class="table" id="ambulance-types-table">
+                <thead>
+                    <tr>
+                        <th rowspan="2" width="7%">#</th>
+                        <th rowspan="2">Name</th>
+                        <th class="text-center" colspan="3">Tarif</th>
+                        <th rowspan="2" width="10%">Actions</th>
+                    </tr>
+                    <tr>
+                        <th>dalam kota</th>
+                        <th>/KM luar kota</th>
+                        <th>/KM luar provinsi</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
     </div>
 </div>
