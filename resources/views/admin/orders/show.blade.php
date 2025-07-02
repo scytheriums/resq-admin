@@ -366,6 +366,7 @@
 
                 // Add a help button to restart the tour
                 const helpButton = document.createElement('button');
+                helpButton.setAttribute('type', 'button');
                 helpButton.className = 'btn btn-outline-primary btn-sm ms-2';
                 helpButton.innerHTML = '<i class="bx bx-help-circle"></i> Bantuan';
                 helpButton.onclick = function() {
