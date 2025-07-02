@@ -207,7 +207,7 @@
         <!-- Right Column -->
         <div id="order-actions-section" 
              class="col-lg-5 col-xl-4" 
-             @if($order->order_status === 'created')
+             @if(in_array($order->order_status, ['created', 'booked']))
                 data-intro="<h5>Kelola Pesanan</h5><p>Di sini Anda dapat mengatur driver dan layanan tambahan untuk pesanan ini.</p>"
                 data-step="1"
              @endif>
@@ -231,7 +231,7 @@
                             <p class="info-value mb-0">{{ $order->ambulanceType->name ?? '-' }}</p>
                         </div>
                         <div class="mb-3" 
-                             @if($order->order_status === 'created')
+                             @if(in_array($order->order_status, ['created', 'booked']))
                                 data-intro="<h5>Tujuan Penggunaan</h5><p>Tujuan penggunaan layanan ini.</p>"
                                 data-step="2"
                              @endif>
@@ -241,12 +241,12 @@
 
                         <!-- Editable Driver -->
                         <div class="mb-3" 
-                             @if($order->order_status === 'created')
+                             @if(in_array($order->order_status, ['created', 'booked']))
                                 data-intro="<h5>Pilih Driver</h5><p>Pilih driver yang tersedia untuk menangani pesanan ini. Pastikan driver yang dipilih sesuai dengan zona dan ketersediaannya.</p>"
                                 data-step="2"
                              @endif>
                             <label for="driverSelect" class="form-label">Driver</label>
-                            @if ($order->order_status !== 'created' && $order->driver)
+                            @if (!in_array($order->order_status, ['created', 'booked']) && $order->driver)
                                 <p class="info-value mb-0">{{ $order->driver->name }} ({{ $order->driver->phone_number }})</p>
                                 <small class="text-muted">Driver tidak dapat diubah setelah pesanan diproses.</small>
                             @else
@@ -265,7 +265,7 @@
                         </div>
 
                         <!-- Editable Additional Services -->
-                        <div @if($order->order_status === 'created')
+                        <div @if(in_array($order->order_status, ['created', 'booked']))
                                 data-intro="<h5>Layanan Tambahan</h5><p>Pilih layanan tambahan yang diperlukan. Harga akan otomatis diperbarui di rincian pembayaran.</p>"
                                 data-step="3"
                              @endif>
@@ -316,7 +316,7 @@
                     </div>
                 </div>
 
-                @if ($order->order_status === 'created')
+                @if (in_array($order->order_status, ['created', 'booked']))
                     <button type="submit" 
                             id="submitBtn" 
                             class="btn btn-primary w-100"
@@ -338,7 +338,7 @@
     <script>
         // Initialize intro.js if order status is created
         document.addEventListener('DOMContentLoaded', function() {
-            @if($order->order_status === 'created')
+            @if(in_array($order->order_status, ['created', 'booked']))
                 // Check if we should show the intro
                 const showIntro = localStorage.getItem('orderTourShown') !== 'true';
                 
