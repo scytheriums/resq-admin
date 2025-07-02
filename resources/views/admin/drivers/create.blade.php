@@ -1,9 +1,8 @@
 @extends('layouts.master')
 
-@section('title', $title)
 
 @section('vendor-css')
-    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/formvalidation/dist/css/formValidation.min.css') }}" />
+<link rel="stylesheet" href="{{ asset('assets/vendor/libs/select2/select2.css') }}" />
 @endsection
 
 @section('content')
@@ -20,67 +19,38 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label class="form-label" for="name">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" required />
+                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="Enter driver's full name" required />
                         </div>
                         <div class="mb-3">
-                            <label class="form-label" for="phone">Phone</label>
-                            <input type="text" class="form-control" id="phone" name="phone" required />
+                            <label class="form-label" for="phone_number">Phone</label>
+                            <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ old('phone_number') }}" placeholder="Enter driver's phone number" required />
                         </div>
                         <div class="mb-3">
-                            <label class="form-label" for="email">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" />
+                            <label class="form-label" for="telegram_chat_id">Telegram Chat ID</label>
+                            <input type="text" class="form-control" id="telegram_chat_id" name="telegram_chat_id" value="{{ old('telegram_chat_id') }}" placeholder="Enter Telegram Chat ID" />
                         </div>
                         <div class="mb-3">
-                            <label class="form-label" for="photo">Photo</label>
-                            <input type="file" class="form-control" id="photo" name="photo" />
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label" for="license_number">License Number</label>
-                            <input type="text" class="form-control" id="license_number" name="license_number" required />
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="license_expiry_date">License Expiry Date</label>
-                            <input type="date" class="form-control" id="license_expiry_date" name="license_expiry_date" required />
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="license_photo">License Photo</label>
-                            <input type="file" class="form-control" id="license_photo" name="license_photo" />
-                        </div>
-                    </div>
-                </div>
-                <div class="row mt-4">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label" for="vehicle_number">Vehicle Number</label>
-                            <input type="text" class="form-control" id="vehicle_number" name="vehicle_number" required />
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="vehicle_type">Vehicle Type</label>
-                            <input type="text" class="form-control" id="vehicle_type" name="vehicle_type" required />
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="vehicle_photo">Vehicle Photo</label>
-                            <input type="file" class="form-control" id="vehicle_photo" name="vehicle_photo" />
+                            <label class="form-label" for="license_plate">License Plate</label>
+                            <input type="text" class="form-control" id="license_plate" name="license_plate" value="{{ old('license_plate') }}" placeholder="Enter vehicle license plate number" />
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label" for="vehicle_brand">Vehicle Brand</label>
-                            <input type="text" class="form-control" id="vehicle_brand" name="vehicle_brand" required />
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="vehicle_model">Vehicle Model</label>
-                            <input type="text" class="form-control" id="vehicle_model" name="vehicle_model" required />
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="status">Status</label>
-                            <select class="form-select" id="status" name="status" required>
-                                <option value="available">Available</option>
-                                <option value="on_duty">On Duty</option>
-                                <option value="unavailable">Unavailable</option>
+                            <label class="form-label" for="ambulance_type_id">Ambulance Type</label>
+                            <select class="form-select" id="ambulance_type_id" name="ambulance_type_id" required>
+                                <option value="">Select Ambulance Type</option>
+                                @foreach($ambulanceTypes as $type)
+                                    <option value="{{ $type->id }}" {{ old('ambulance_type_id') == $type->id ? 'selected' : '' }}>
+                                        {{ $type->name }}
+                                    </option>
+                                @endforeach
                             </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="base_address">Base Address</label>
+                            <textarea class="form-control" id="base_address" rows="5" name="base_address" placeholder="Enter the base address of the ambulance" required>{{ old('base_address') }}</textarea>
+                            <input type="hidden" class="form-control" id="base_latitude" name="base_latitude" value="{{ old('base_latitude') }}" placeholder="Latitude will be auto-filled from map" required readonly />
+                            <input type="hidden" class="form-control" id="base_longitude" name="base_longitude" value="{{ old('base_longitude') }}" placeholder="Longitude will be auto-filled from map" required readonly />
                         </div>
                     </div>
                 </div>
@@ -94,87 +64,15 @@
 </div>
 @endsection
 
+@section('vendor-js')
+<script src="{{ asset('assets/vendor/libs/select2/select2.js') }}"></script>
+@endsection
+
 @push('page-js')
-    <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js') }}"></script>
-    <script src="{{ asset('assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js') }}"></script>
     <script>
-        $(document).ready(function() {
-            const fv = $('#drivers-form').formValidation({
-                fields: {
-                    name: {
-                        validators: {
-                            notEmpty: {
-                                message: 'Name is required'
-                            },
-                            stringLength: {
-                                max: 255,
-                                message: 'Name must be less than 255 characters'
-                            }
-                        }
-                    },
-                    phone: {
-                        validators: {
-                            notEmpty: {
-                                message: 'Phone is required'
-                            },
-                            stringLength: {
-                                max: 20,
-                                message: 'Phone must be less than 20 characters'
-                            }
-                        }
-                    },
-                    email: {
-                        validators: {
-                            emailAddress: {
-                                message: 'Invalid email address'
-                            }
-                        }
-                    },
-                    license_number: {
-                        validators: {
-                            notEmpty: {
-                                message: 'License number is required'
-                            }
-                        }
-                    },
-                    license_expiry_date: {
-                        validators: {
-                            notEmpty: {
-                                message: 'License expiry date is required'
-                            }
-                        }
-                    },
-                    vehicle_number: {
-                        validators: {
-                            notEmpty: {
-                                message: 'Vehicle number is required'
-                            }
-                        }
-                    },
-                    vehicle_type: {
-                        validators: {
-                            notEmpty: {
-                                message: 'Vehicle type is required'
-                            }
-                        }
-                    },
-                    vehicle_brand: {
-                        validators: {
-                            notEmpty: {
-                                message: 'Vehicle brand is required'
-                            }
-                        }
-                    },
-                    vehicle_model: {
-                        validators: {
-                            notEmpty: {
-                                message: 'Vehicle model is required'
-                            }
-                        }
-                    }
-                }
-            });
+        $('#ambulance_type_id').select2({
+            placeholder: 'Select Ambulance Type',
+            allowClear: true
         });
     </script>
 @endpush

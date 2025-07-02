@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
 // Authentication Routes
-Route::middleware(['guest:admin'])->name('admin.')->group(function () {
+Route::middleware(['guest:web'])->name('admin.')->group(function () {
     Route::get('admin/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('admin/login', [LoginController::class, 'login'])->name('login.submit');
     Route::get('admin/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
@@ -20,5 +20,5 @@ Route::middleware(['guest:admin'])->name('admin.')->group(function () {
 });
 
 // Logout Route (requires authentication)
-Route::get('admin/logout', [LoginController::class, 'logout'])->middleware('auth:admin')->name('admin.logout');
-Route::post('admin/logout', [LoginController::class, 'logout'])->middleware('auth:admin')->name('admin.logout');
+Route::get('admin/logout', [LoginController::class, 'logout'])->middleware('auth:web')->name('admin.logout');
+Route::post('admin/logout', [LoginController::class, 'logout'])->middleware('auth:web')->name('admin.logout');

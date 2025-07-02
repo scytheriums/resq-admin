@@ -8,11 +8,17 @@ class AmbulanceType extends Model
 {
     protected $fillable = [
         'name',
-        'base_price'
+        'tarif_dalam_kota',
+        'tarif_km_luar_kota',
+        'tarif_km_luar_provinsi',
+        'free_tarif_for_purpose'
     ];
 
     protected $casts = [
-        'base_price' => 'float'
+        'tarif_dalam_kota' => 'float',
+        'tarif_km_luar_kota' => 'float',
+        'tarif_km_luar_provinsi' => 'float',
+        'free_tarif_for_purpose' => 'array',
     ];
 
     public function orders()

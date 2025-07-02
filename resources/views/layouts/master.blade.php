@@ -185,8 +185,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <span class="fw-semibold d-block">{{ auth()->user()?->username }}</span>
-                                                    <small class="text-muted">{{ auth()->user()?->type }}</small>
+                                                    <span class="fw-semibold d-block">{{ auth()->user()?->name }}</span>
+                                                    <small class="text-muted">Admin</small>
                                                 </div>
                                             </div>
                                         </a>
@@ -271,13 +271,6 @@
 
     <!-- Page JS -->
     @stack('page-js')
-    @if (session()->has('has_to_do'))
-        <script>
-            $(document).ready(function() {
-                $('#modal-to-do').modal('show');
-            })
-        </script>
-    @endif
 </body>
 
 </html>

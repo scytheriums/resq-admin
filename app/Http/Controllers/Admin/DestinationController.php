@@ -24,13 +24,7 @@ class DestinationController extends Controller
                                 ' . $delete . '
                             </div>';
                 })
-                ->addColumn('location', function ($data) {
-                    return $data->city . ', ' . $data->province . '<br>' . $data->postal_code;
-                })
-                ->addColumn('status', function ($data) {
-                    return '<span class="badge ' . ($data->is_active ? 'bg-success' : 'bg-danger') . '">' . ($data->is_active ? 'Active' : 'Inactive') . '</span>';
-                })
-                ->rawColumns(['action', 'status'])
+                ->rawColumns(['action'])
                 ->make(true);
         }
         $title = 'Destinations';

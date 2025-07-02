@@ -6,7 +6,7 @@
                 <script>
                     document.write(new Date().getFullYear());
                 </script>
-                , made with ❤️ by <a href="#" target="_blank" class="fw-semibold">Telkomsel</a>
+                , made with ❤️ by <a href="#" target="_blank" class="fw-semibold">{{ env('APP_NAME') }}</a>
             </div>
 
         </div>

@@ -121,14 +121,10 @@
                                 <tr>
                                     <td>{{ $order->order_number }}</td>
                                     <td>
-                                        <span class="badge badge-{{ $order->status === 'completed' ? 'success' : ($order->status === 'cancelled' ? 'danger' : 'warning') }}">
-                                            {{ $order->status }}
-                                        </span>
+                                        <x-status-badge :class="$order->order_status_class" :label="$order->order_status_label" />
                                     </td>
                                     <td>
-                                        <span class="badge badge-{{ $order->payment_status === 'full_payment_paid' ? 'success' : 'warning' }}">
-                                            {{ $order->payment_status }}
-                                        </span>
+                                        <x-status-badge :class="$order->payment_status_class" :label="$order->payment_status_label" />
                                     </td>
                                     <td>{{ $order->created_at->format('M d, Y H:i') }}</td>
                                     <td>
@@ -152,24 +148,42 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="text-center">
-                                <i class="bx bx-user-check display-4 text-success"></i>
-                                <h3>{{ $driverStatus['available'] }}</h3>
-                                <p class="text-muted">Available</p>
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div class="me-3">
+                                    <span class="badge bg-label-success p-2 rounded-circle">
+                                        <i class="ti ti-user-check fs-4"></i>
+                                    </span>
+                                </div>
+                                <div>
+                                    <h4 class="mb-0">{{ $driverStatus['available'] }}</h4>
+                                    <small class="text-muted">Available</small>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="text-center">
-                                <i class="bx bx-car display-4 text-primary"></i>
-                                <h3>{{ $driverStatus['onDuty'] }}</h3>
-                                <p class="text-muted">On Duty</p>
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div class="me-3">
+                                    <span class="badge bg-label-primary p-2 rounded-circle">
+                                        <i class="ti ti-car fs-4"></i>
+                                    </span>
+                                </div>
+                                <div>
+                                    <h4 class="mb-0">0</h4>
+                                    <small class="text-muted">On Duty</small>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="text-center">
-                                <i class="bx bx-user-x display-4 text-danger"></i>
-                                <h3>{{ $driverStatus['unavailable'] }}</h3>
-                                <p class="text-muted">Unavailable</p>
+                            <div class="d-flex align-items-center justify-content-center">
+                                <div class="me-3">
+                                    <span class="badge bg-label-danger p-2 rounded-circle">
+                                        <i class="ti ti-user-x fs-4"></i>
+                                    </span>
+                                </div>
+                                <div>
+                                    <h4 class="mb-0">{{ $driverStatus['unavailable'] }}</h4>
+                                    <small class="text-muted">Unavailable</small>
+                                </div>
                             </div>
                         </div>
                     </div>

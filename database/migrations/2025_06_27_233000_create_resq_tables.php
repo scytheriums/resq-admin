@@ -14,8 +14,12 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('phone');
-            $table->string('status')->default('available');
-            $table->decimal('average_rating', 3, 2)->default(0);
+            $table->string('telegram_chat_id')->nullable();
+            $table->string('license_plate')->nullable();
+            $table->foreignId('ambulance_type_id')->constrained();
+            $table->text('base_address');
+            $table->text('base_latitude');
+            $table->text('base_longitude');
             $table->timestamps();
         });
 
@@ -23,7 +27,9 @@ return new class extends Migration
         Schema::create('ambulance_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->decimal('base_price', 10, 2);
+            $table->decimal('tarif_dalam_kota', 10, 2);
+            $table->decimal('tarif_km_luar_kota', 10, 2);
+            $table->decimal('tarif_km_luar_provinsi', 10, 2);
             $table->timestamps();
         });
 
@@ -66,7 +72,8 @@ return new class extends Migration
         Schema::create('order_additional_services', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained();
-            $table->foreignId('additional_service_id')->constrained();
+            $table->foreignId('service_id')->constrained();
+            $table->decimal('price', 10, 2);
             $table->timestamps();
         });
 
@@ -86,8 +93,9 @@ return new class extends Migration
         Schema::dropIfExists('order_additional_services');
         Schema::dropIfExists('additional_services');
         Schema::dropIfExists('purposes');
-        Schema::dropIfExists('ambulance_types');
-        Schema::dropIfExists('drivers');
         Schema::dropIfExists('orders');
+        // Drop drivers after orders to handle foreign key constraints
+        Schema::dropIfExists('drivers');
+        Schema::dropIfExists('ambulance_types');
     }
 };

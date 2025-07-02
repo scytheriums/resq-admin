@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -27,11 +29,13 @@ class LoginController extends Controller
             return back()->withErrors($validator)->withInput($request->only('email', 'remember'));
         }
 
-        if (Auth::guard('admin')->attempt([
-            'email' => $request->email,
-            'password' => $request->password,
-            'status' => 'active'
-        ], $request->remember)) {
+        // Get the user by email
+        $user = User::where('email', $request->email)->first();
+
+        // Check if user exists and password is correct
+        if ($user && Hash::check($request->password, $user->password_hash)) {
+            // Manually log in the user
+            Auth::login($user, $request->remember);
             return redirect()->intended('/admin/dashboard');
         }
 
@@ -41,7 +45,7 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::guard('admin')->logout();
+        Auth::guard()->logout();
         $request->session()->invalidate();
         return redirect('/admin/login');
     }

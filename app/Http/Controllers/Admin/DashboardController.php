@@ -16,8 +16,8 @@ class DashboardController extends Controller
         
         $summary = [
             'todayOrders' => Order::whereDate('created_at', $today)->count(),
-            'ongoingOrders' => Order::whereIn('status', ['booked', 'assigned_to_driver', 'in_progress_pickup', 'in_progress_deliver'])->count(),
-            'availableDrivers' => Driver::where('status', 'available')->count(),
+            'ongoingOrders' => Order::whereIn('order_status', ['booked', 'assigned_to_driver', 'in_progress_pickup', 'in_progress_deliver'])->count(),
+            'availableDrivers' => Driver::isAvailable()->count(),
             'todayRevenue' => Order::whereDate('created_at', $today)->sum('total_bill')
         ];
 
@@ -34,16 +34,15 @@ class DashboardController extends Controller
 
         // Get recent orders
         $recentOrders = Order::with(['user', 'driver', 'ambulanceType', 'purpose'])
-            ->whereIn('status', ['created', 'booked'])
+            ->whereIn('order_status', ['created', 'booked'])
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();
 
         // Get driver status
         $driverStatus = [
-            'available' => Driver::where('status', 'available')->count(),
-            'onDuty' => Driver::where('status', 'on_duty')->count(),
-            'unavailable' => Driver::where('status', 'unavailable')->count()
+            'available' => Driver::isAvailable()->count(),
+            'unavailable' => Driver::isUnavailable()->count()
         ];
 
         $title = 'Dashboard';

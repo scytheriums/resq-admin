@@ -15,6 +15,9 @@ class PurposeController extends Controller
             $purposes = Purpose::query()->withCount('orders');
             return DataTables::of($purposes)
                 ->addIndexColumn()
+                ->editColumn('tarif', function ($data) {
+                    return 'Rp ' . number_format($data->tarif, 0);
+                })
                 ->addColumn('action', function ($data) {
                     $edit = '<a class="text-body" href="' . route('admin.purposes.edit', $data->id) . '"><i class="ti ti-edit ti-sm me-2"></i></a>';
                     $delete = '<a href="" class="text-body delete-record btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="' . route('admin.purposes.destroy', $data->id) . '" data-name="' . $data->name . '"> <i class="ti ti-trash ti-sm mx-2"></i></a>';
@@ -46,7 +49,7 @@ class PurposeController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:purposes,name',
-            'description' => 'nullable|string',
+            'tarif' => 'required|numeric|min:0',
         ]);
 
         Purpose::create($validated);
@@ -63,7 +66,7 @@ class PurposeController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:purposes,name,' . $purpose->id,
-            'description' => 'nullable|string',
+            'tarif' => 'required|numeric|min:0',
         ]);
 
         $purpose->update($validated);

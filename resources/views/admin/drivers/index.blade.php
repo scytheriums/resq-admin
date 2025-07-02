@@ -12,16 +12,16 @@
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold py-3 mb-4">
-        <span class="text-muted fw-light">Admin /</span> Drivers
+        <span class="text-muted fw-light">Admin /</span> Pengemudi
     </h4>
 
     <div class="card">
         <div class="card-header">
-            <h5 class="card-title">Drivers List</h5>
+            <h5 class="card-title">Daftar Pengemudi</h5>
             <div class="d-flex justify-content-end">
                 <a href="{{ route('admin.drivers.create') }}" class="btn btn-primary">
                     <i class="bx bx-plus me-sm-2"></i>
-                    <span class="d-none d-sm-inline-block">Add New Driver</span>
+                    <span class="d-none d-sm-inline-block">Tambah Pengemudi</span>
                 </a>
             </div>
         </div>
@@ -31,9 +31,11 @@
                     <thead>
                         <tr>
                             <th width="7%">#</th>
-                            <th>Name</th>
-                            <th>Phone</th>
-                            <th>Status</th>
+                            <th>Nama</th>
+                            <th>No. Telf</th>
+                            <th>Nomor Plat</th>
+                            <th>Ambulan</th>
+                            <th>Avg. Rating</th>
                             <th width="10%">Actions</th>
                         </tr>
                     </thead>
@@ -43,6 +45,7 @@
         </div>
     </div>
 </div>
+@include('components.delete-modal')
 @endsection
 
 @push('page-js')
@@ -62,16 +65,30 @@
                         orderable: false,
                         searchable: false
                     },
-                    { data: 'name', name: 'name' },
-                    { data: 'phone', name: 'phone' },
-                    { data: 'status', name: 'status', orderable: false, searchable: false },
+                    { data: 'name'},
+                    { data: 'phone_number'},
+                    { data: 'license_plate'},
+                    { data: 'ambulance_type.name'},
+                    { data: 'average_rating', className: 'text-center'},
                     { 
                         data: 'action',
-                        name: 'action',
                         orderable: false,
                         searchable: false
                     }
                 ]
+            }).on('draw.dt', function() {
+                $('.btn-delete').on('click', function(e) {
+                    e.preventDefault();
+                    let url = $(this).data('url');
+                    let name = $(this).data('name');
+                    $('.delete-type').html('Driver');
+                    $('.delete-hint').html(name);
+
+                    $('.btn-confirm-delete').off('click').on('click', function(e) {
+                        $('.deleteModalForm').attr('action', url);
+                        $('.deleteModalForm').submit();
+                    });
+                });
             });
         });
     </script>

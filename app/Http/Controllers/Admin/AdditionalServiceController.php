@@ -23,6 +23,9 @@ class AdditionalServiceController extends Controller
                                 ' . $delete . '
                             </div>';
                 })
+                ->editColumn('price', function ($data) {
+                    return 'Rp ' . number_format($data->price);
+                })
                 ->rawColumns(['action'])
                 ->make(true);
         }
@@ -30,10 +33,10 @@ class AdditionalServiceController extends Controller
         return view('admin.additional-services.index', compact('title'));
     }
 
-    public function show(AdditionalService $service)
+    public function show(AdditionalService $additionalService)
     {
         $title = 'Additional Service Details';
-        return view('admin.additional-services.show', compact('service', 'title'));
+        return view('admin.additional-services.show', compact('additionalService', 'title'));
     }
 
     public function create()
@@ -54,16 +57,16 @@ class AdditionalServiceController extends Controller
         return redirect()->route('admin.additional-services.index')->with('success', 'Service created successfully');
     }
 
-    public function edit(AdditionalService $service)
+    public function edit(AdditionalService $additionalService)
     {
         $title = 'Edit Additional Service';
-        return view('admin.additional-services.edit', compact('service', 'title'));
+        return view('admin.additional-services.edit', compact('additionalService', 'title'));
     }
 
-    public function update(Request $request, AdditionalService $service)
+    public function update(Request $request, AdditionalService $additionalService)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:additional_services,name,' . $service->id,
+            'name' => 'required|string|max:255|unique:additional_services,name,' . $additionalService->id,
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
         ]);
@@ -72,9 +75,9 @@ class AdditionalServiceController extends Controller
         return redirect()->route('admin.additional-services.index')->with('success', 'Service updated successfully');
     }
 
-    public function destroy(AdditionalService $service)
+    public function destroy(AdditionalService $additionalService)
     {
-        $service->delete();
+        $additionalService->delete();
         return redirect()->route('admin.additional-services.index')->with('success', 'Service deleted successfully');
     }
 }

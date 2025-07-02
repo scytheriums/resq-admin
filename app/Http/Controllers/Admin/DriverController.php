@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Driver;
+use App\Models\AmbulanceType;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -12,7 +13,7 @@ class DriverController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $drivers = Driver::query();
+            $drivers = Driver::query()->with('ambulanceType');
             return DataTables::of($drivers)
                 ->addIndexColumn()
                 ->addColumn('action', function ($data) {
@@ -27,9 +28,6 @@ class DriverController extends Controller
                     return '<span class="badge ' . ($data->status === 'available' ? 'bg-success' : ($data->status === 'on_duty' ? 'bg-warning' : 'bg-danger')) . '">' . 
                         ($data->status === 'available' ? 'Available' : ($data->status === 'on_duty' ? 'On Duty' : 'Unavailable')) . 
                     '</span>';
-                })
-                ->addColumn('vehicle', function ($data) {
-                    return $data->vehicle_brand . ' ' . $data->vehicle_model . ' (' . $data->vehicle_type . ')';
                 })
                 ->rawColumns(['action', 'status'])
                 ->make(true);
@@ -48,39 +46,24 @@ class DriverController extends Controller
     public function create()
     {
         $title = 'Create Driver';
-        return view('admin.drivers.create', compact('title'));
+        $ambulanceTypes = AmbulanceType::orderBy('name')->get();
+        return view('admin.drivers.create', compact('title', 'ambulanceTypes'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'email' => 'nullable|email|unique:drivers,email',
-            'license_number' => 'required|string|unique:drivers,license_number',
-            'license_expiry_date' => 'required|date',
-            'vehicle_number' => 'required|string|unique:drivers,vehicle_number',
-            'vehicle_type' => 'required|string',
-            'vehicle_brand' => 'required|string',
-            'vehicle_model' => 'required|string',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'license_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'vehicle_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => 'required|in:available,on_duty,unavailable'
+            'phone_number' => 'required|string|max:20',
+            'telegram_chat_id' => 'nullable|string|max:255',
+            'license_plate' => 'nullable|string|max:20',
+            'ambulance_type_id' => 'required|exists:ambulance_types,id',
+            'base_address' => 'required|string'
         ]);
 
-        if ($request->hasFile('photo')) {
-            $validated['photo'] = $request->photo->store('drivers/photos');
-        }
-
-        if ($request->hasFile('license_photo')) {
-            $validated['license_photo'] = $request->license_photo->store('drivers/licenses');
-        }
-
-        if ($request->hasFile('vehicle_photo')) {
-            $validated['vehicle_photo'] = $request->vehicle_photo->store('drivers/vehicles');
-        }
-
+        // // Set default status
+        // $validated['status'] = 'available';
+        
         Driver::create($validated);
 
         return redirect()->route('admin.drivers.index')->with('success', 'Driver created successfully');
@@ -89,38 +72,20 @@ class DriverController extends Controller
     public function edit(Driver $driver)
     {
         $title = 'Edit Driver';
-        return view('admin.drivers.edit', compact('driver', 'title'));
+        $ambulanceTypes = AmbulanceType::orderBy('name')->get();
+        return view('admin.drivers.edit', compact('title', 'driver', 'ambulanceTypes'));
     }
 
     public function update(Request $request, Driver $driver)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'email' => 'nullable|email|unique:drivers,email,' . $driver->id,
-            'license_number' => 'required|string|unique:drivers,license_number,' . $driver->id,
-            'license_expiry_date' => 'required|date',
-            'vehicle_number' => 'required|string|unique:drivers,vehicle_number,' . $driver->id,
-            'vehicle_type' => 'required|string',
-            'vehicle_brand' => 'required|string',
-            'vehicle_model' => 'required|string',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'license_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'vehicle_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => 'required|in:available,on_duty,unavailable'
+            'phone_number' => 'required|string|max:20',
+            'telegram_chat_id' => 'nullable|string|max:100',
+            'license_plate' => 'nullable|string|max:20',
+            'ambulance_type_id' => 'required',
+            'base_address' => 'required|string|max:500'
         ]);
-
-        if ($request->hasFile('photo')) {
-            $validated['photo'] = $request->photo->store('drivers/photos');
-        }
-
-        if ($request->hasFile('license_photo')) {
-            $validated['license_photo'] = $request->license_photo->store('drivers/licenses');
-        }
-
-        if ($request->hasFile('vehicle_photo')) {
-            $validated['vehicle_photo'] = $request->vehicle_photo->store('drivers/vehicles');
-        }
 
         $driver->update($validated);
 
