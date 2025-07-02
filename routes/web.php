@@ -10,7 +10,7 @@ require __DIR__.'/admin.php';
 
 // Public Routes
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('admin.login');
 });
 
 Route::get('/login', function () {
