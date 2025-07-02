@@ -250,7 +250,7 @@
                                 <p class="info-value mb-0">{{ $order->driver->name }} ({{ $order->driver->phone_number }})</p>
                                 <small class="text-muted">Driver tidak dapat diubah setelah pesanan diproses.</small>
                             @else
-                                <select class="form-select" id="driverSelect" name="driver_id">
+                                <select class="form-select @error('driver_id') is-invalid @enderror" id="driverSelect" name="driver_id">
                                     <option value="">Pilih Driver</option>
                                     @foreach($drivers as $driver)
                                         <option value="{{ $driver->id }}" {{ $order->driver_id == $driver->id ? 'selected' : '' }}>
@@ -258,6 +258,9 @@
                                         </option>
                                     @endforeach
                                 </select>
+                                @error('driver_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             @endif
                         </div>
 
