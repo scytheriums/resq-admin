@@ -20,5 +20,5 @@ Route::middleware(['guest:web'])->name('admin.')->group(function () {
 });
 
 // Logout Route (requires authentication)
-Route::get('admin/logout', [LoginController::class, 'logout'])->middleware('auth:web')->name('admin.logout');
+// Route::get('admin/logout', [LoginController::class, 'logout'])->middleware('auth:web')->name('admin.logout');
 Route::post('admin/logout', [LoginController::class, 'logout'])->middleware('auth:web')->name('admin.logout');
