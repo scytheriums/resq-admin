@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Driver;
 use App\Models\AmbulanceType;
 use Illuminate\Http\Request;
@@ -10,6 +9,14 @@ use Yajra\DataTables\Facades\DataTables;
 
 class DriverController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['permission:read-driver'], ['only' => ['index', 'show']]);
+        $this->middleware(['permission:create-driver'], ['only' => ['create', 'store']]);
+        $this->middleware(['permission:update-driver'], ['only' => ['edit', 'update']]);
+        $this->middleware(['permission:delete-driver'], ['only' => ['destroy']]);
+    }
+    
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -17,8 +24,17 @@ class DriverController extends Controller
             return DataTables::of($drivers)
                 ->addIndexColumn()
                 ->addColumn('action', function ($data) {
-                    $edit = '<a class="text-body" href="' . route('admin.drivers.edit', $data->id) . '"><i class="ti ti-edit ti-sm me-2"></i></a>';
-                    $delete = '<a href="" class="text-body delete-record btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="' . route('admin.drivers.destroy', $data->id) . '" data-name="' . $data->name . '"> <i class="ti ti-trash ti-sm mx-2"></i></a>';
+                    $edit = '';
+                    $delete = '';
+
+                    if (auth()->user()->can('update-driver')) {
+                        $edit = '<a class="text-body" href="' . route('admin.drivers.edit', $data->id) . '"><i class="ti ti-edit ti-sm me-2"></i></a>';
+                    }
+
+                    if (auth()->user()->can('delete-driver')) {
+                        $delete = '<a href="" class="text-body delete-record btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="' . route('admin.drivers.destroy', $data->id) . '" data-name="' . $data->name . '"> <i class="ti ti-trash ti-sm mx-2"></i></a>';
+                    }
+
                     return ' <div class="d-flex align-items-center">
                                 ' . $edit . '
                                 ' . $delete . '

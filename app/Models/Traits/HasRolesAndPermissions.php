@@ -4,6 +4,7 @@ namespace App\Models\Traits;
 
 use App\Models\Role;
 use App\Models\Permission;
+use Illuminate\Support\Facades\Auth;
 
 trait HasRolesAndPermissions
 {
@@ -61,5 +62,37 @@ trait HasRolesAndPermissions
     {
         $role = Role::where('slug', $role)->firstOrFail();
         return $this->roles()->syncWithoutDetaching($role);
+    }
+
+    /**
+     * Determine if the user has the given ability.
+     *
+     * @param  string  $ability
+     * @param  array|mixed  $arguments
+     * @return bool
+     */
+    public function can($ability, $arguments = [])
+    {
+        return $this->hasPermission($ability);
+    }
+
+    /**
+     * Determine if the user has any of the given abilities.
+     *
+     * @param  array|string  $abilities
+     * @param  array|mixed  $arguments
+     * @return bool
+     */
+    public function canAny($abilities, $arguments = [])
+    {
+        $abilities = is_array($abilities) ? $abilities : func_get_args();
+
+        foreach ($abilities as $ability) {
+            if ($this->can($ability)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

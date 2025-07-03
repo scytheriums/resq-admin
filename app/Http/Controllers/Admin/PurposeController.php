@@ -2,13 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Purpose;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 class PurposeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['permission:read-purpose'], ['only' => ['index', 'show']]);
+        $this->middleware(['permission:create-purpose'], ['only' => ['create', 'store']]);
+        $this->middleware(['permission:update-purpose'], ['only' => ['edit', 'update']]);
+        $this->middleware(['permission:delete-purpose'], ['only' => ['destroy']]);
+    }
+    
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -19,8 +26,16 @@ class PurposeController extends Controller
                     return 'Rp ' . number_format($data->tarif, 0);
                 })
                 ->addColumn('action', function ($data) {
-                    $edit = '<a class="text-body" href="' . route('admin.purposes.edit', $data->id) . '"><i class="ti ti-edit ti-sm me-2"></i></a>';
-                    $delete = '<a href="" class="text-body delete-record btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="' . route('admin.purposes.destroy', $data->id) . '" data-name="' . $data->name . '"> <i class="ti ti-trash ti-sm mx-2"></i></a>';
+                    $edit = '';
+                    $delete = '';
+                    if (auth()->user()->can('update-purpose')) {
+                        $edit = '<a class="text-body" href="' . route('admin.purposes.edit', $data->id) . '"><i class="ti ti-edit ti-sm me-2"></i></a>';
+                    }
+
+                    if (auth()->user()->can('delete-purpose')) {
+                        $delete = '<a href="" class="text-body delete-record btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="' . route('admin.purposes.destroy', $data->id) . '" data-name="' . $data->name . '"> <i class="ti ti-trash ti-sm mx-2"></i></a>';
+                    }
+
                     return ' <div class="d-flex align-items-center">
                                 ' . $edit . '
                                 ' . $delete . '

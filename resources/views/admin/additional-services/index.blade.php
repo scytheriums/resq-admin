@@ -17,13 +17,27 @@
     <div class="card">
         <div class="card-header">
             <h4 class="card-title">Daftar Layanan Tambahan</h4>
-            <div class="d-flex justify-content-end">
-                <a href="{{ route('admin.additional-services.create') }}" class="btn btn-primary">
-                    <i class="bx bx-plus me-sm-2"></i>
-                    <span class="d-none d-sm-inline-block">Tambah Layanan</span>
-                </a>
-            </div>
+            @if (auth()->user()->can('create-additional-service'))
+                <div class="d-flex justify-content-end">
+                    <a href="{{ route('admin.additional-services.create') }}" class="btn btn-primary">
+                        <i class="bx bx-plus me-sm-2"></i>
+                        <span class="d-none d-sm-inline-block">Tambah Layanan</span>
+                    </a>
+                </div>
+            @endif
         </div>
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
         <div class="table-responsive card-datatable">
             <table class="table" id="additional-services-table">
                 <thead>

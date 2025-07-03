@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Destination;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -10,6 +9,14 @@ use Yajra\DataTables\Facades\DataTables;
 
 class DestinationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['permission:read-destination'], ['only' => ['index', 'show']]);
+        $this->middleware(['permission:create-destination'], ['only' => ['create', 'store']]);
+        $this->middleware(['permission:update-destination'], ['only' => ['edit', 'update']]);
+        $this->middleware(['permission:delete-destination'], ['only' => ['destroy']]);
+    }
+    
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -18,8 +25,15 @@ class DestinationController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($data) {
                     $edit = '';
-                    // $edit = '<a class="text-body" href="' . route('admin.destinations.edit', $data->id) . '"><i class="ti ti-edit ti-sm me-2"></i></a>';
-                    $delete = '<a href="" class="text-body delete-record btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="' . route('admin.destinations.destroy', $data->id) . '" data-name="' . $data->name . '"> <i class="ti ti-trash ti-sm mx-2"></i></a>';
+                    $delete = '';
+                    // if (auth()->user()->can('update-destination')) {
+                    //     $edit = '<a class="text-body" href="' . route('admin.destinations.edit', $data->id) . '"><i class="ti ti-edit ti-sm me-2"></i></a>';
+                    // }
+
+                    if (auth()->user()->can('delete-destination')) {
+                        $delete = '<a href="" class="text-body delete-record btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="' . route('admin.destinations.destroy', $data->id) . '" data-name="' . $data->name . '"> <i class="ti ti-trash ti-sm mx-2"></i></a>';
+                    }
+
                     return ' <div class="d-flex align-items-center">
                                 ' . $edit . '
                                 ' . $delete . '

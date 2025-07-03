@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Services\TelegramService;
 use App\Models\Order;
 use App\Models\Driver;
@@ -15,6 +14,14 @@ use Yajra\DataTables\Facades\DataTables;
 
 class OrderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['permission:read-order'], ['only' => ['index', 'show']]);
+        $this->middleware(['permission:create-order'], ['only' => ['create', 'store']]);
+        $this->middleware(['permission:update-order'], ['only' => ['edit', 'update']]);
+        $this->middleware(['permission:delete-order'], ['only' => ['destroy']]);
+    }
+
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -22,9 +29,16 @@ class OrderController extends Controller
             return DataTables::of($orders)
                 ->addIndexColumn()
                 ->addColumn('action', function ($data) {
-                    $edit = '<a class="text-body" href="' . route('admin.orders.show', $data->id) . '"><i class="ti ti-edit ti-sm me-2"></i></a>';
-                    // $delete = '<a href="" class="text-body delete-record btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="' . route('admin.orders.destroy', $data->id) . '" data-name="Order #' . $data->order_number . '"> <i class="ti ti-trash ti-sm mx-2"></i></a>';
+                    $edit = '';
                     $delete = '';
+                    if (auth()->user()->can('update-order')) {
+                        $edit = '<a class="text-body" href="' . route('admin.orders.show', $data->id) . '"><i class="ti ti-edit ti-sm me-2"></i></a>';
+                    }
+
+                    // if (auth()->user()->can('delete-order')) {
+                    //     $delete = '<a href="" class="text-body delete-record btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="' . route('admin.orders.destroy', $data->id) . '" data-name="Order #' . $data->order_number . '"> <i class="ti ti-trash ti-sm mx-2"></i></a>';
+                    // }
+
                     return ' <div class="d-flex align-items-center justify-content-center">
                                 ' . $edit . '
                                 ' . $delete . '

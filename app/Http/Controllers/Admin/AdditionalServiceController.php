@@ -2,13 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\AdditionalService;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
 class AdditionalServiceController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['permission:read-additional-service'], ['only' => ['index', 'show']]);
+        $this->middleware(['permission:create-additional-service'], ['only' => ['create', 'store']]);
+        $this->middleware(['permission:update-additional-service'], ['only' => ['edit', 'update']]);
+        $this->middleware(['permission:delete-additional-service'], ['only' => ['destroy']]);
+    }   
+
     public function index(Request $request)
     {
         if ($request->ajax()) {

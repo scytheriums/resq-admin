@@ -18,13 +18,27 @@
     <div class="card">
         <div class="card-header">
             <h5 class="card-title">Daftar Pengemudi</h5>
-            <div class="d-flex justify-content-end">
-                <a href="{{ route('admin.drivers.create') }}" class="btn btn-primary">
-                    <i class="bx bx-plus me-sm-2"></i>
-                    <span class="d-none d-sm-inline-block">Tambah Pengemudi</span>
-                </a>
-            </div>
+            @if (auth()->user()->can('create-driver'))
+                <div class="d-flex justify-content-end">
+                    <a href="{{ route('admin.drivers.create') }}" class="btn btn-primary">
+                        <i class="bx bx-plus me-sm-2"></i>
+                        <span class="d-none d-sm-inline-block">Tambah Pengemudi</span>
+                    </a>
+                </div>
+            @endif
         </div>
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
         <div class="table-responsive card-datatable">
             <table class="table" id="drivers-table">
                 <thead>

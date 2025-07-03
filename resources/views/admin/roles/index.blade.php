@@ -14,10 +14,12 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="card-title mb-0">Daftar Peran</h5>
-            <a href="{{ route('admin.roles.create') }}" class="btn btn-primary">
-                <i class="bx bx-plus me-sm-2"></i>
-                <span class="d-none d-sm-inline-block">Tambah Peran</span>
-            </a>
+            @if (auth()->user()->can('create-roles'))
+                <a href="{{ route('admin.roles.create') }}" class="btn btn-primary">
+                    <i class="bx bx-plus me-sm-2"></i>
+                    <span class="d-none d-sm-inline-block">Tambah Peran</span>
+                </a>
+            @endif
         </div>
         @if (session('success'))
             <div class="alert alert-success alert-dismissible" role="alert">
@@ -36,33 +38,13 @@
             <table class="table" id="datatable">
                 <thead>
                     <tr>
+                        <th width="7%">#</th>
                         <th>Nama</th>
-                        <th width="10%">Jumlah Pengguna</th>
-                        <th width="15%">Aksi</th>
+                        <th>Jumlah Pengguna</th>
+                        <th width="10%">Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach ($roles as $role)
-                        <tr>
-                            <td>{{ $role->name }}</td>
-                            <td>{{ $role->users_count }}</td>
-                            <td width="15%">
-                                <div class="d-flex align-items-center">
-                                    <a href="{{ route('admin.roles.edit', $role->id) }}" class="text-body">
-                                        <i class="ti ti-edit ti-sm me-2"></i>
-                                    </a>
-                                    <a href="#" class="text-body delete-record btn-delete" 
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#deleteModal" 
-                                        data-url="{{ route('admin.roles.destroy', $role->id) }}" 
-                                        data-name="{{ $role->name }}">
-                                        <i class="ti ti-trash ti-sm mx-2"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
     </div>
@@ -73,13 +55,38 @@
     @include('layouts.script_datatables')
     <script>
         $(document).ready(function() {
-            $('#datatable').DataTable({
+            var table = $('#datatable').DataTable({
                 responsive: true,
                 pageLength: 10,
-                order: [[0, 'asc']]
+                order: [[1, 'asc']],
+                processing: true,
+                serverSide: true,
+                ajax: '{{ route('admin.roles.index') }}',
+                columns: [
+                    { 
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    { data: 'name', name: 'name' },
+                    { 
+                        data: 'users_count', 
+                        name: 'users_count',
+                        className: 'text-center'
+                    },
+                    { 
+                        data: 'action',
+                        name: 'action',
+                        className: 'text-center',
+                        orderable: false,
+                        searchable: false
+                    }
+                ]
             });
 
-            $('.btn-delete').on('click', function(e) {
+            // Handle delete button click on dynamically loaded content
+            $('#datatable').on('click', '.btn-delete', function(e) {
                 e.preventDefault();
                 let url = $(this).data('url');
                 let name = $(this).data('name');

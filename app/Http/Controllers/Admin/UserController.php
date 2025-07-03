@@ -2,23 +2,68 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['permission:read-users'], ['only' => ['index', 'show']]);
+        $this->middleware(['permission:create-users'], ['only' => ['create', 'store']]);
+        $this->middleware(['permission:update-users'], ['only' => ['edit', 'update']]);
+        $this->middleware(['permission:delete-users'], ['only' => ['destroy']]);
+    }
+    
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with('roles')->latest()->paginate(10);
+        if ($request->ajax()) {
+            $data = User::with('roles');
+            
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('roles', function($user) {
+                    $roles = '';
+                    foreach ($user->roles as $role) {
+                        $roles .= '<span class="badge bg-primary">' . $role->name . '</span> ';
+                    }
+                    return $roles;
+                })
+                ->addColumn('action', function($user) {
+                    $edit = '';
+                    $delete = '';
+                    
+                    if (auth()->user()->can('update-users')) {
+                        $edit = '<a href="' . route('admin.users.edit', $user->id) . '" class="text-body">';
+                        $edit .= '<i class="ti ti-edit ti-sm me-2"></i>';
+                        $edit .= '</a>';
+                    }
+                    
+                    if (auth()->user()->can('delete-users')) {
+                        $delete = '<a href="#" class="text-body delete-record btn-delete" ';
+                        $delete .= 'data-bs-toggle="modal" ';
+                        $delete .= 'data-bs-target="#deleteModal" ';
+                        $delete .= 'data-url="' . route('admin.users.destroy', $user->id) . '" ';
+                        $delete .= 'data-name="' . $user->name . '">';
+                        $delete .= '<i class="ti ti-trash ti-sm mx-2"></i>';
+                        $delete .= '</a>';
+                    }
+                    
+                    return '<div class="d-flex align-items-center justify-content-center">' . $edit . $delete . '</div>';
+                })
+                ->rawColumns(['roles', 'action'])
+                ->make(true);
+        }
+        
         $title = 'Daftar Pengguna';
-        return view('admin.users.index', compact('users', 'title'));
+        return view('admin.users.index', compact('title'));
     }
 
     /**

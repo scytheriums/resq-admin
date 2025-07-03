@@ -17,8 +17,12 @@ class PermissionMiddleware
      */
     public function handle(Request $request, Closure $next, $permission)
     {
-        if (! $request->user()->hasPermission($permission)) {
-            abort(403, 'Unauthorized action.');
+        if (! $request->user()) {
+            return redirect()->route('admin.login');
+        }
+
+        if (! $request->user()->can($permission)) {
+            abort(403, 'You do not have the required permissions to access this page.');
         }
 
         return $next($request);

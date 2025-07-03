@@ -14,10 +14,12 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="card-title mb-0">Daftar Hak Akses</h5>
-            <a href="{{ route('admin.permissions.create') }}" class="btn btn-primary">
-                <i class="bx bx-plus me-sm-2"></i>
-                <span class="d-none d-sm-inline-block">Tambah Hak Akses</span>
-            </a>
+            @if (auth()->user()->can('create-permissions'))
+                <a href="{{ route('admin.permissions.create') }}" class="btn btn-primary">
+                    <i class="bx bx-plus me-sm-2"></i>
+                    <span class="d-none d-sm-inline-block">Tambah Hak Akses</span>
+                </a>
+            @endif
         </div>
         @if (session('success'))
             <div class="alert alert-success alert-dismissible" role="alert">
@@ -35,33 +37,13 @@
             <table class="table" id="datatable">
                 <thead>
                     <tr>
+                        <th width="7%">#</th>
                         <th>Nama</th>
                         <th>Slug</th>
                         <th width="10%">Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach ($permissions as $permission)
-                        <tr>
-                            <td>{{ $permission->name }}</td>
-                            <td>{{ $permission->slug }}</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <a href="{{ route('admin.permissions.edit', $permission->id) }}" class="text-body">
-                                        <i class="ti ti-edit ti-sm me-2"></i>
-                                    </a>
-                                    <a href="#" class="text-body delete-record btn-delete" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#deleteModal" 
-                                    data-url="{{ route('admin.permissions.destroy', $permission->id) }}" 
-                                    data-name="{{ $permission->name }}">
-                                        <i class="ti ti-trash ti-sm mx-2"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
     </div>
@@ -72,13 +54,34 @@
     @include('layouts.script_datatables')
     <script>
         $(document).ready(function() {
-            $('#datatable').DataTable({
+            var table = $('#datatable').DataTable({
                 responsive: true,
                 pageLength: 10,
-                order: [[0, 'asc']]
+                order: [[1, 'asc']],
+                processing: true,
+                serverSide: true,
+                ajax: '{{ route('admin.permissions.index') }}',
+                columns: [
+                    { 
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    { data: 'name', name: 'name' },
+                    { data: 'slug', name: 'slug' },
+                    { 
+                        data: 'action',
+                        name: 'action',
+                        className: 'text-center',
+                        orderable: false,
+                        searchable: false
+                    }
+                ]
             });
 
-            $('.btn-delete').on('click', function(e) {
+            // Handle delete button click on dynamically loaded content
+            $('#datatable').on('click', '.btn-delete', function(e) {
                 e.preventDefault();
                 let url = $(this).data('url');
                 let name = $(this).data('name');

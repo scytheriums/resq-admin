@@ -76,6 +76,12 @@ class RolePermissionSeeder extends Seeder
             ['name' => 'Read Setting', 'slug' => 'read-setting'],
             ['name' => 'Update Setting', 'slug' => 'update-setting'],
             ['name' => 'Delete Setting', 'slug' => 'delete-setting'],
+
+            // Order Permissions
+            ['name' => 'Create Order', 'slug' => 'create-order'],
+            ['name' => 'Read Order', 'slug' => 'read-order'],
+            ['name' => 'Update Order', 'slug' => 'update-order'],
+            ['name' => 'Delete Order', 'slug' => 'delete-order'],
         ];
 
         foreach ($permissions as $permission) {

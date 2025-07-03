@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\AmbulanceType;
 use App\Models\Driver;
 use Illuminate\Http\Request;
@@ -10,6 +9,14 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AmbulanceTypeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['permission:read-ambulance-type'], ['only' => ['index', 'show']]);
+        $this->middleware(['permission:create-ambulance-type'], ['only' => ['create', 'store']]);
+        $this->middleware(['permission:update-ambulance-type'], ['only' => ['edit', 'update']]);
+        $this->middleware(['permission:delete-ambulance-type'], ['only' => ['destroy']]);
+    }
+    
     public function index(Request $request)
     {
         if ($request->ajax()) {
@@ -17,8 +24,16 @@ class AmbulanceTypeController extends Controller
             return DataTables::of($ambulanceTypes)
                 ->addIndexColumn()
                 ->addColumn('action', function ($data) {
-                    $edit = '<a class="text-body" href="' . route('admin.ambulance-types.edit', $data->id) . '"><i class="ti ti-edit ti-sm me-2"></i></a>';
-                    $delete = '<a href="" class="text-body delete-record btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="' . route('admin.ambulance-types.destroy', $data->id) . '" data-name="' . $data->name . '"> <i class="ti ti-trash ti-sm mx-2"></i></a>';
+                    $edit = '';
+                    $delete = '';
+                    if (auth()->user()->can('update-ambulance-type')) {
+                        $edit = '<a class="text-body" href="' . route('admin.ambulance-types.edit', $data->id) . '"><i class="ti ti-edit ti-sm me-2"></i></a>';
+                    }
+
+                    if (auth()->user()->can('delete-ambulance-type')) {
+                        $delete = '<a href="" class="text-body delete-record btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="' . route('admin.ambulance-types.destroy', $data->id) . '" data-name="' . $data->name . '"> <i class="ti ti-trash ti-sm mx-2"></i></a>';
+                    }
+
                     return ' <div class="d-flex align-items-center">
                                 ' . $edit . '
                                 ' . $delete . '

@@ -14,63 +14,40 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="card-title mb-0">Daftar Pengguna</h5>
-            <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
-                <i class="bx bx-plus me-sm-2"></i>
-                <span class="d-none d-sm-inline-block">Tambah Pengguna</span>
-            </a>
+            @if (auth()->user()->can('create-users'))
+                <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
+                    <i class="bx bx-plus me-sm-2"></i>
+                    <span class="d-none d-sm-inline-block">Tambah Pengguna</span>
+                </a>
+            @endif
         </div>
         @if (session('success'))
-                <div class="alert alert-success alert-dismissible" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-             @if (session('error'))
-                <div class="alert alert-danger alert-dismissible" role="alert">
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-            
-            <div class="table-responsive card-datatable">
-                <table class="table" id="datatable">
-                    <thead>
-                        <tr>
-                            <th>Nama</th>
-                            <th>Email</th>
-                            <th class="text-center">Peran</th>
-                            <th width="10%" class="text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($users as $user)
-                            <tr>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td class="text-center">
-                                    @foreach ($user->roles as $role)
-                                        <span class="badge bg-primary">{{ $role->name }}</span>
-                                    @endforeach
-                                </td>
-                                <td class="text-center">
-                                    <div class="d-flex align-items-center justify-content-center">
-                                        <a href="{{ route('admin.users.edit', $user->id) }}" class="text-body">
-                                            <i class="ti ti-edit ti-sm me-2"></i>
-                                        </a>
-                                        <a href="#" class="text-body delete-record btn-delete" 
-                                           data-bs-toggle="modal" 
-                                           data-bs-target="#deleteModal" 
-                                           data-url="{{ route('admin.users.destroy', $user->id) }}" 
-                                           data-name="{{ $user->name }}">
-                                            <i class="ti ti-trash ti-sm mx-2"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            <div class="alert alert-success alert-dismissible" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        
+        <div class="table-responsive card-datatable">
+            <table class="table" id="datatable">
+                <thead>
+                    <tr>
+                        <th width="7%">#</th>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th class="text-center">Peran</th>
+                        <th width="10%" class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 </div>
 @include('components.delete-modal')
@@ -79,13 +56,41 @@
     @include('layouts.script_datatables')
     <script>
         $(document).ready(function() {
-            $('#datatable').DataTable({
+            var table = $('#datatable').DataTable({
                 responsive: true,
                 pageLength: 10,
-                order: [[0, 'asc']]
+                order: [[2, 'asc']],
+                processing: true,
+                serverSide: true,
+                ajax: '{{ route('admin.users.index') }}',
+                columns: [
+                    { 
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    { data: 'name', name: 'name' },
+                    { data: 'email', name: 'email' },
+                    { 
+                        data: 'roles', 
+                        name: 'roles.name',
+                        className: 'text-center',
+                        orderable: false,
+                        searchable: false
+                    },
+                    { 
+                        data: 'action',
+                        name: 'action',
+                        className: 'text-center',
+                        orderable: false,
+                        searchable: false
+                    }
+                ]
             });
 
-            $('.btn-delete').on('click', function(e) {
+            // Handle delete button click on dynamically loaded content
+            $('#datatable').on('click', '.btn-delete', function(e) {
                 e.preventDefault();
                 let url = $(this).data('url');
                 let name = $(this).data('name');

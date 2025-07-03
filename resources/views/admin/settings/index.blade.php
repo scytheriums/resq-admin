@@ -14,44 +14,39 @@
     <div class="card">
         <div class="card-header">
             <h5 class="card-title">Pengaturan Aplikasi</h5>
-            <div class="d-flex justify-content-end">
-                <a href="{{ route('admin.settings.create') }}" class="btn btn-primary">
-                    <i class="bx bx-plus me-sm-2"></i>
-                    <span class="d-none d-sm-inline-block">Tambah Baru</span>
-                </a>
-            </div>
+            @if (auth()->user()->can('create-setting'))
+                <div class="d-flex justify-content-end">
+                    <a href="{{ route('admin.settings.create') }}" class="btn btn-primary">
+                        <i class="bx bx-plus me-sm-2"></i>
+                        <span class="d-none d-sm-inline-block">Tambah Baru</span>
+                    </a>
+                </div>
+            @endif
         </div>
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
         <div class="table-responsive card-datatable">
-            <table class="table" id="settings-table">
+            <table class="table" id="datatable">
                 <thead>
                     <tr>
+                        <th width="7%">#</th>
                         <th>Kunci</th>
                         <th>Nilai</th>
                         <th>Deskripsi</th>
-                        <th>Aksi</th>
+                        <th width="10%">Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @forelse($settings as $setting)
-                        <tr>
-                            <td>{{ $setting->getAttributes()['key'] }}</td>
-                            <td>{{ $setting->value }}</td>
-                            <td>{{ $setting->description }}</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <a href="{{ route('admin.settings.edit', $setting->getAttributes()['key']) }}" class="text-body">
-                                        <i class="ti ti-edit ti-sm me-2"></i>
-                                    </a>
-                                    <a href="" class="text-body delete-record btn-delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="{{ route('admin.settings.destroy', $setting->getAttributes()['key']) }}" data-name="{{ $setting->getAttributes()['key'] }}"> <i class="ti ti-trash ti-sm mx-2"></i></a>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" class="text-center">Tidak ada data pengaturan. <a href="{{ route('admin.settings.create') }}">Buat baru</a>.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
     </div>
@@ -63,19 +58,55 @@
     @include('layouts.script_datatables')
     <script>
         $(document).ready(function() {
-            $('#settings-table').DataTable({
-                responsive: true
+            var table = $('#datatable').DataTable({
+                responsive: true,
+                pageLength: 10,
+                order: [[1, 'asc']],
+                processing: true,
+                serverSide: true,
+                ajax: '{{ route('admin.settings.index') }}',
+                columns: [
+                    { 
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    { data: 'key', name: 'key' },
+                    { 
+                        data: 'value', 
+                        name: 'value',
+                        render: function(data, type, row) {
+                            return data.length > 50 ? data.substring(0, 50) + '...' : data;
+                        }
+                    },
+                    { 
+                        data: 'description', 
+                        name: 'description',
+                        render: function(data, type, row) {
+                            return data ? (data.length > 50 ? data.substring(0, 50) + '...' : data) : '-';
+                        }
+                    },
+                    { 
+                        data: 'action',
+                        name: 'action',
+                        className: 'text-center',
+                        orderable: false,
+                        searchable: false
+                    }
+                ]
             });
 
-            $('.btn-delete').on('click', function(e) {
+            // Handle delete button click on dynamically loaded content
+            $('#datatable').on('click', '.btn-delete', function(e) {
+                e.preventDefault();
                 let url = $(this).data('url');
                 let name = $(this).data('name');
                 $('.delete-type').html('Pengaturan');
                 $('.delete-hint').html(name);
 
-                $('.btn-confirm-delete').on('click', function(e) {
-                    $('.deleteModalForm').attr('action', url)
-                    $('.deleteModalForm').submit();
+                $('.btn-confirm-delete').off('click').on('click', function() {
+                    $('.deleteModalForm').attr('action', url).submit();
                 });
             });
         });

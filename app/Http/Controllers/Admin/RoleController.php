@@ -2,20 +2,58 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Yajra\DataTables\Facades\DataTables;
 
 class RoleController extends Controller
 {
-    public function index()
+    public function __construct()
     {
-        $roles = Role::withCount('users')->latest()->paginate(10);
+        $this->middleware(['permission:read-roles'], ['only' => ['index', 'show']]);
+        $this->middleware(['permission:create-roles'], ['only' => ['create', 'store']]);
+        $this->middleware(['permission:update-roles'], ['only' => ['edit', 'update']]);
+        $this->middleware(['permission:delete-roles'], ['only' => ['destroy']]);
+    }
+    
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Role::withCount('users');
+            
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($role) {
+                    $edit = '';
+                    $delete = '';
+                    
+                    if (auth()->user()->can('update-roles')) {
+                        $edit = '<a href="' . route('admin.roles.edit', $role->id) . '" class="text-body">';
+                        $edit .= '<i class="ti ti-edit ti-sm me-2"></i>';
+                        $edit .= '</a>';
+                    }
+                    
+                    if (auth()->user()->can('delete-roles')) {
+                        $delete = '<a href="#" class="text-body delete-record btn-delete" ';
+                        $delete .= 'data-bs-toggle="modal" ';
+                        $delete .= 'data-bs-target="#deleteModal" ';
+                        $delete .= 'data-url="' . route('admin.roles.destroy', $role->id) . '" ';
+                        $delete .= 'data-name="' . $role->name . '">';
+                        $delete .= '<i class="ti ti-trash ti-sm mx-2"></i>';
+                        $delete .= '</a>';
+                    }
+                    
+                    return '<div class="d-flex align-items-center">' . $edit . $delete . '</div>';
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+        
         $title = 'Roles';
-        return view('admin.roles.index', compact('roles', 'title'));
+        return view('admin.roles.index', compact('title'));
     }
 
     public function create()
