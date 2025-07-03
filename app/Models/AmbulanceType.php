@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\LogsActivity;
 
 class AmbulanceType extends Model
 {
+    use LogsActivity;
     protected $fillable = [
         'name',
         'tarif_dalam_kota',

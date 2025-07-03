@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Traits\LogsActivity;
 
 class Driver extends Model
 {
+    use LogsActivity;
     protected $fillable = [
         'name',
         'phone_number',

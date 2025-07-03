@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\LogsActivity;
 
 class Order extends Model
 {
+    use LogsActivity;
     private $paymentStates = [
         'booking_fee_pending' => [
             'label' => 'Menunggu Booking Fee',

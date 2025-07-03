@@ -6,18 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class ActivityLog extends Model
 {
+    public $timestamps = false;
     protected $fillable = [
-        'user_id',
-        'action',
-        'data'
+        'actor_id',
+        'actor_type',
+        'action_type',
+        'description',
+        'details',
+        'ip_address'
     ];
 
     protected $casts = [
-        'data' => 'array'
+        'details' => 'json'
     ];
 
-    public function user()
+
+    public function actor()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'actor_id', 'id');
     }
 }
