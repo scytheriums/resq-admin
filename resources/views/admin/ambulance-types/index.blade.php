@@ -46,6 +46,7 @@
                         <th rowspan="2" width="7%">#</th>
                         <th rowspan="2">Name</th>
                         <th class="text-center" colspan="3">Tarif</th>
+                        <th rowspan="2" width="15%">Gratis untuk (Dalam Kota)</th>
                         <th rowspan="2" width="10%">Actions</th>
                     </tr>
                     <tr>
@@ -83,6 +84,7 @@
                     { data: 'tarif_dalam_kota', class: 'text-end' },
                     { data: 'tarif_km_luar_kota', class: 'text-end' },
                     { data: 'tarif_km_luar_provinsi', class: 'text-end' },
+                    { data: 'free_tarif_for_purpose', class: 'text-center' },
                     { data: 'action', name: 'action', orderable: false, searchable: false }
                 ]
             });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\AmbulanceType;
 use App\Models\Driver;
+use App\Models\Purpose;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -21,6 +22,7 @@ class AmbulanceTypeController extends Controller
     {
         if ($request->ajax()) {
             $ambulanceTypes = AmbulanceType::query();
+            $purposes = Purpose::pluck('name','id');
             return DataTables::of($ambulanceTypes)
                 ->addIndexColumn()
                 ->addColumn('action', function ($data) {
@@ -39,8 +41,24 @@ class AmbulanceTypeController extends Controller
                                 ' . $delete . '
                             </div>';
                 })
-                ->editColumn('tarif_dalam_kota', function ($data) {
-                    return 'Rp ' . number_format($data->tarif_dalam_kota, 2);
+                ->editColumn('tarif_dalam_kota', function ($data) use ($purposes) {
+                    $html = '<div class="d-block">Rp ' . number_format($data->tarif_dalam_kota, 2). '</div>';
+                    
+                    return $html;
+                })
+                ->editColumn('free_tarif_for_purpose', function ($data) use ($purposes) {
+                    $html = '';
+                    if($data->free_tarif_for_purpose && count($data->free_tarif_for_purpose)) {
+                        $gratis = '';
+                        foreach($purposes as $purpose) {
+                            $gratis .= '<span class="badge bg-success d-block" style="margin-top: 5px;">'.$purpose.'</span>';
+                        }
+                        $html .= '<div class="d-block">'.$gratis.'</div>';
+                    } else {
+                        $html = 'N/A';
+                    }
+                    
+                    return $html;
                 })
                 ->editColumn('tarif_km_luar_kota', function ($data) {
                     return 'Rp ' . number_format($data->tarif_km_luar_kota, 2);
@@ -48,7 +66,7 @@ class AmbulanceTypeController extends Controller
                 ->editColumn('tarif_km_luar_provinsi', function ($data) {
                     return 'Rp ' . number_format($data->tarif_km_luar_provinsi, 2);
                 })
-                ->rawColumns(['action'])
+                ->rawColumns(['action', 'free_tarif_for_purpose', 'tarif_dalam_kota'])
                 ->make(true);
         }
         $title = 'Ambulance Types';
