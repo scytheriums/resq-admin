@@ -32,16 +32,12 @@ class FCMNotificationService
                     'notification' => [
                         'title' => $title,
                         'body'  => $body,
+                        'icon'  => 'https://resq-mu.vercel.app/icons/icon-192x192.png',
+                        'badge' => 'https://resq-mu.vercel.app/icons/badge-72x72.png'
                     ],
-                    'webpush' => [
-                        'notification' => [
-                            'icon' => 'https://resq-mu.vercel.app/icons/icon-192x192.png',
-                            'badge' => 'https://resq-mu.vercel.app/icons/badge-72x72.png',
-                            'tag' => 'resqin-notification-tag'
-                        ],
-                        'fcm_options' => [
-                            'link' => 'https://resq-mu.vercel.app/transaksi'
-                        ]
+                    // Pindahkeun sadaya data tambahan ka dieu
+                    'data' => [
+                        'url' => 'https://resq-mu.vercel.app/transaksi' // <-- konci 'url' di jero 'data'
                     ]
                 ]
             ];
