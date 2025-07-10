@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Driver;
 use Carbon\Carbon;
+use App\Services\FcmNotificationService;
+use App\Models\FCMTokens; // Import model for FCM tokens if needed
 
 class DashboardController extends Controller
 {
@@ -46,5 +48,19 @@ class DashboardController extends Controller
         $title = 'Dashboard';
 
         return view('admin.dashboard', compact('summary', 'orderTrend', 'recentOrders', 'driverStatus', 'title'));
+    }
+
+    public function send_notif(FcmNotificationService $fcm)
+    {
+        $tokens = FcmTokens::pluck('token')->toArray();
+        if (empty($tokens)) {
+            return response()->json(['message' => 'No active FCM tokens found'], 404);
+        }
+        foreach ($tokens as $token) {
+            // Send notification to each token
+            $fcm->send($token, 'Mari Kita Crot', 'Crot sana crot sini crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini');
+        }
+        // $fcm->send($token, 'Test Notification', 'This is a test notification from the admin dashboard.');
+        return response()->json(['message' => 'Notification sent successfully']);
     }
 }

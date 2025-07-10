@@ -66,7 +66,7 @@
         <li class="menu-item {{ request()->is('admin/purposes*') ? 'active' : '' }}">
           <a href="{{ route('admin.purposes.index') }}" class="menu-link">
             <i class="menu-icon tf-icons ti ti-target"></i>
-            <div>Tujuan</div>
+            <div>Tujuan Pemesanan</div>
           </a>
         </li>
       @endif
@@ -84,7 +84,7 @@
         <li class="menu-item {{ request()->is('admin/destinations*') ? 'active' : '' }}">
           <a href="{{ route('admin.destinations.index') }}" class="menu-link">
             <i class="menu-icon tf-icons ti ti-map"></i>
-            <div>Destinasi</div>
+            <div>Pustaka Tempat</div>
           </a>
         </li>
       @endif

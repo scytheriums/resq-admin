@@ -200,6 +200,26 @@
             </div>
         </div>
     </div>
+    <br>
+    <div class="card mb-4">
+        <div class="card-body">
+            <form action="{{ route('admin.send_notif') }}" id="form_data" method="POST">
+                @csrf
+                <div class="mb-3">
+                    <label for="description" class="form-label">Contoh Pesan</label>
+                    <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3">{{ old('description') }}</textarea>
+                    @error('description')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="mt-4">
+                    <button type="button" class="btn btn-primary me-2" onclick="joss()">
+                        <i class='bx bx-save me-1'></i> Joss!
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -300,6 +320,27 @@
         if (typeof lineChartEl !== undefined && lineChartEl !== null) {
             const lineChart = new ApexCharts(lineChartEl, lineChartConfig);
             lineChart.render();
+        }
+
+        function joss(){
+            $.ajax({
+                type: "POST",
+                url: "{{ route('admin.send_notif') }}",
+                data: $('#form_data').serialize(),
+                // beforeSend: function(){
+                //     small_loader_open('form_data');
+                // },
+                success: function (s) {
+                    console.log(s);
+                },
+                error: function(e){
+                    sw_multi_error(e);
+                    // small_loader_close('form_data');
+                },
+                complete: function(){
+                    // small_loader_close('form_data');
+                }
+            });
         }
 
     </script>
