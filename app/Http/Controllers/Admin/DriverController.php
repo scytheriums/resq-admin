@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Driver;
 use App\Models\AmbulanceType;
+use App\Models\Province;
+use App\Models\City;
+use App\Models\District;
+use App\Models\Village;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -61,9 +65,56 @@ class DriverController extends Controller
 
     public function create()
     {
+        $ambulanceTypes = AmbulanceType::all();
         $title = 'Create Driver';
-        $ambulanceTypes = AmbulanceType::orderBy('name')->get();
-        return view('admin.drivers.create', compact('title', 'ambulanceTypes'));
+        return view('admin.drivers.create', compact('ambulanceTypes', 'title'));
+    }
+
+    public function getProvinces()
+    {
+        $provinces = Province::select('code', 'name')
+        ->when(request('search'), function($record, $search) {
+            return $record->where('name', 'ilike', '%'.$search.'%');
+        })
+        ->get();
+        
+        return response()->json($provinces);
+    }
+
+    public function getCities(Request $request)
+    {
+        $cities = City::where('province_code', $request->province_code)
+            ->select('code', 'name')
+            ->when(request('search'), function($record, $search) {
+                return $record->where('name', 'ilike', '%'.$search.'%');
+            })
+            ->get();
+
+        return response()->json($cities);
+    }
+
+    public function getDistricts(Request $request)
+    {
+        $districts = District::where('city_code', $request->city_code)
+            ->select('code', 'name')
+            ->when(request('search'), function($record, $search) {
+                return $record->where('name', 'ilike', '%'.$search.'%');
+            })
+            ->get();
+
+        return response()->json($districts);
+    }
+
+    public function getVillages(Request $request)
+    {
+        $villages = Village::where('district_code', $request->district_code)
+            ->select('code', 'name')
+            ->when(request('search'), function($record, $search) {
+                return $record->where('name', 'ilike', '%'.$search.'%');
+            })
+            ->get();
+
+        return response()->json($villages);
     }
 
     public function store(Request $request)
@@ -74,7 +125,11 @@ class DriverController extends Controller
             'telegram_chat_id' => 'nullable|string|max:255',
             'license_plate' => 'nullable|string|max:20',
             'ambulance_type_id' => 'required|exists:ambulance_types,id',
-            'base_address' => 'required|string'
+            'base_address' => 'required|string',
+            'province_code' => 'required',
+            'city_code' => 'required',
+            'district_code' => 'required',
+            'village_code' => 'required'
         ]);
 
         // // Set default status
@@ -100,7 +155,11 @@ class DriverController extends Controller
             'telegram_chat_id' => 'nullable|string|max:100',
             'license_plate' => 'nullable|string|max:20',
             'ambulance_type_id' => 'required',
-            'base_address' => 'required|string|max:500'
+            'base_address' => 'required|string|max:500',
+            'province_code' => 'required',
+            'city_code' => 'required',
+            'district_code' => 'required',
+            'village_code' => 'required'
         ]);
 
         $driver->update($validated);

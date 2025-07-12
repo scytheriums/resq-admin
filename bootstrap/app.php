@@ -19,3 +19,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
+
+    // $this->app->register(Laravolt\Indonesia\ServiceProvider::class);
+    // /*
+    //  * Create aliases for the dependency.
+    //  */
+    // $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+    // $loader->alias('Indonesia', Laravolt\Indonesia\Facade::class);

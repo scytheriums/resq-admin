@@ -33,6 +33,12 @@
                             <label class="form-label" for="license_plate">License Plate</label>
                             <input type="text" class="form-control" id="license_plate" name="license_plate" value="{{ old('license_plate') }}" placeholder="Enter vehicle license plate number" />
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="base_address">Base Address</label>
+                            <textarea class="form-control" id="base_address" rows="5" name="base_address" placeholder="Enter the base address of the ambulance" required>{{ old('base_address') }}</textarea>
+                            <input type="hidden" class="form-control" id="base_latitude" name="base_latitude" value="{{ old('base_latitude') }}" placeholder="Latitude will be auto-filled from map" required readonly />
+                            <input type="hidden" class="form-control" id="base_longitude" name="base_longitude" value="{{ old('base_longitude') }}" placeholder="Longitude will be auto-filled from map" required readonly />
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
@@ -47,10 +53,28 @@
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label" for="base_address">Base Address</label>
-                            <textarea class="form-control" id="base_address" rows="5" name="base_address" placeholder="Enter the base address of the ambulance" required>{{ old('base_address') }}</textarea>
-                            <input type="hidden" class="form-control" id="base_latitude" name="base_latitude" value="{{ old('base_latitude') }}" placeholder="Latitude will be auto-filled from map" required readonly />
-                            <input type="hidden" class="form-control" id="base_longitude" name="base_longitude" value="{{ old('base_longitude') }}" placeholder="Longitude will be auto-filled from map" required readonly />
+                            <label class="form-label" for="province_code">Province</label>
+                            <select class="form-select select2-ajax" id="province_code" name="province_code" required>
+                                <option value="">Select Province</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="city_code">City</label>
+                            <select class="form-select select2-ajax" id="city_code" name="city_code" required>
+                                <option value="">Select City</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="district_code">District</label>
+                            <select class="form-select select2-ajax" id="district_code" name="district_code" required>
+                                <option value="">Select District</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="village_code">Village</label>
+                            <select class="form-select select2-ajax" id="village_code" name="village_code" required>
+                                <option value="">Select Village</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -70,6 +94,134 @@
 
 @push('page-js')
     <script>
+        // Initialize province select2
+        $('#province_code').select2({
+            placeholder: 'Select Province',
+            allowClear: true,
+            ajax: {
+                url: '{{ route('admin.drivers.get-provinces') }}',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        search: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data.map(function (item) {
+                            return {
+                                id: item.code,
+                                text: item.name
+                            }
+                        })
+                    };
+                },
+                cache: true
+            }
+        });
+
+        // Initialize city select2
+        $('#city_code').select2({
+            placeholder: 'Select City',
+            allowClear: true,
+            ajax: {
+                url: '{{ route('admin.drivers.get-cities') }}',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        search: params.term,
+                        province_code: $('#province_code').val()
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data.map(function (item) {
+                            return {
+                                id: item.code,
+                                text: item.name
+                            }
+                        })
+                    };
+                },
+                cache: true
+            }
+        });
+
+        // Initialize district select2
+        $('#district_code').select2({
+            placeholder: 'Select District',
+            allowClear: true,
+            ajax: {
+                url: '{{ route('admin.drivers.get-districts') }}',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        search: params.term,
+                        city_code: $('#city_code').val()
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data.map(function (item) {
+                            return {
+                                id: item.code,
+                                text: item.name
+                            }
+                        })
+                    };
+                },
+                cache: true
+            }
+        });
+
+        // Initialize village select2
+        $('#village_code').select2({
+            placeholder: 'Select Village',
+            allowClear: true,
+            ajax: {
+                url: '{{ route('admin.drivers.get-villages') }}',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        search: params.term,
+                        district_code: $('#district_code').val()
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data.map(function (item) {
+                            return {
+                                id: item.code,
+                                text: item.name
+                            }
+                        })
+                    };
+                },
+                cache: true
+            }
+        });
+
+        // Handle cascading dropdowns
+        $('#province_code').on('change', function() {
+            $('#city_code').val(null).trigger('change');
+            $('#district_code').val(null).trigger('change');
+            $('#village_code').val(null).trigger('change');
+        });
+
+        $('#city_code').on('change', function() {
+            $('#district_code').val(null).trigger('change');
+            $('#village_code').val(null).trigger('change');
+        });
+
+        $('#district_code').on('change', function() {
+            $('#village_code').val(null).trigger('change');
+        });
+
+        // Initialize ambulance type select2
         $('#ambulance_type_id').select2({
             placeholder: 'Select Ambulance Type',
             allowClear: true

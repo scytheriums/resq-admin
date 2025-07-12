@@ -38,7 +38,7 @@
             <span class="text-muted fw-light">Admin / Pesanan /</span> Detail #{{ $order->order_number }}
         </h4>
         <div>
-            @if ($order->order_status === 'in_progress_deliver')
+            @if (in_array($order->order_status, ['in_progress_deliver', 'in_progress_pickup', 'assigned_to_driver']))
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#completeOrderModal">
                     <i class='bx bx-edit me-1'></i> Selesaikan Pesanan
                 </button>

@@ -45,4 +45,9 @@ class User extends Authenticatable
             'password_hash' => 'hashed',
         ];
     }
+
+    public function tokens()
+    {
+        return $this->hasMany(FcmTokens::class);
+    }
 }

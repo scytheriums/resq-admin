@@ -11,6 +11,7 @@ use App\Models\AdditionalService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
+use App\Services\FcmNotificationService;
 
 class OrderController extends Controller
 {
@@ -115,39 +116,52 @@ class OrderController extends Controller
             $order->driver_id = $request->driver_id;
         }
         
-        // Update additional services if provided
-        if ($request->has('additional_services')) {
-            $additionalServices = AdditionalService::whereIn('id', $request->additional_services)->get();
-            $syncData = [];
+        // try {
+        //     DB::beginTransaction();
+                // Update additional services if provided
+                if ($request->has('additional_services')) {
+                    $additionalServices = AdditionalService::whereIn('id', $request->additional_services)->get();
+                    $syncData = [];
+                    
+                    foreach ($additionalServices as $service) {
+                        $syncData[$service->id] = ['price' => $service->price];
+                    }
+                    
+                    $order->additionalServices()->sync($syncData);
+                    $order->additional_services_fee = $additionalServices->sum('price');
+                    
+                    // Recalculate total bill
+                    $order->total_bill = $order->base_price + $order->booking_fee + $order->additional_services_fee;
+                }
+                
+                $order->order_status = 'confirmed';
+                $order->payment_status = 'final_payment_pending';
+                $order->driver->is_available = false;
+                $order->push();
             
-            foreach ($additionalServices as $service) {
-                $syncData[$service->id] = ['price' => $service->price];
-            }
+            // DB::commit();
             
-            $order->additionalServices()->sync($syncData);
-            $order->additional_services_fee = $additionalServices->sum('price');
+            // Send Telegram notification
+            $telegramService = new TelegramService($order->driver->telegram_chat_id);
+            $message = "<b>🚑 Pesanan Baru Dikonfirmasi</b>\n";
+            $message .= "<b>ID Pesanan:</b> #{$order->order_number}\n";
+            $message .= "<b>Nama Pemesan:</b> {$order->name}\n";
+            $message .= "<b>No. HP:</b> {$order->whatsapp_number}\n";
+            $message .= "<b>Alamat Penjemputan:</b> {$order->pickup_address}\n";
+            $message .= "<b>Tujuan:</b> " . ($order->destination_address ?? '-') . "\n";
+            $message .= "<b>Status:</b> " . ucfirst(str_replace('_', ' ', $order->order_status_label)). "\n\n\n";
+            $message .= "<b>Driver Dimohon untuk standby</b>";
             
-            // Recalculate total bill
-            $order->total_bill = $order->base_price + $order->booking_fee + $order->additional_services_fee;
-        }
-        
-        $order->order_status = 'confirmed';
-        $order->payment_status = 'final_payment_pending';
-        $order->driver->is_available = false;
-        $order->push();
-        
-        // Send Telegram notification
-        $telegramService = new TelegramService($order->driver->telegram_chat_id);
-        $message = "<b>🚑 Pesanan Baru Dikonfirmasi</b>\n";
-        $message .= "<b>ID Pesanan:</b> #{$order->order_number}\n";
-        $message .= "<b>Nama Pemesan:</b> {$order->name}\n";
-        $message .= "<b>No. HP:</b> {$order->whatsapp_number}\n";
-        $message .= "<b>Alamat Penjemputan:</b> {$order->pickup_address}\n";
-        $message .= "<b>Tujuan:</b> " . ($order->destination_address ?? '-') . "\n";
-        $message .= "<b>Status:</b> " . ucfirst(str_replace('_', ' ', $order->order_status_label)). "\n\n\n";
-        $message .= "<b>Driver Dimohon untuk standby</b>";
-        
-        $telegramService->sendMessage($message);
+            $telegramService->sendMessage($message);
+
+            // firebase cloud messaging
+            $fcm = $order->user->tokens()->first();
+            if($fcm) FcmNotificationService::send($fcm->token, $order->order_number, 'Pesanan telah dikonfirmasi oleh admin, silahkan meninjau pesanan Anda di aplikasi dan melakukan pembayaran biaya akhir');
+            
+        // } catch (\Exception $e) {
+        //     DB::rollBack();
+        //     throw $e;
+        // }
         
         return redirect()->route('admin.orders.index')->with('success', 'Pesanan berhasil diperbarui.');
     }

@@ -32,8 +32,8 @@ class FCMNotificationService
                     'notification' => [
                         'title' => $title,
                         'body'  => $body,
-                        'icon'  => 'https://resq-mu.vercel.app/icons/icon-192x192.png',
-                        'badge' => 'https://resq-mu.vercel.app/icons/badge-72x72.png'
+                        // 'icon'  => 'https://resq-mu.vercel.app/icons/icon-192x192.png',
+                        // 'badge' => 'https://resq-mu.vercel.app/icons/badge-72x72.png'
                     ],
                     // Pindahkeun sadaya data tambahan ka dieu
                     'data' => [
@@ -53,7 +53,6 @@ class FCMNotificationService
             
             $responseBody = $response->getBody()->getContents();
             Log::info('Notifikasi berhasil dikirim ke FCM.', ['response' => $responseBody]);
-
             return $responseBody;
 
         } catch (Throwable $e) { // <- Tangkap kasalahan nanaon

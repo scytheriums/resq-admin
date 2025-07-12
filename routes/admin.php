@@ -23,6 +23,14 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('orders/{order}/complete', [OrderController::class, 'complete'])->name('orders.complete');
     Route::delete('orders/{order}/review/delete', [OrderController::class, 'deleteReview'])->name('orders.review.delete');
     
+    
+
+    // Location data endpoints
+    Route::get('drivers/get-provinces', [DriverController::class, 'getProvinces'])->name('drivers.get-provinces');
+    Route::get('drivers/get-cities', [DriverController::class, 'getCities'])->name('drivers.get-cities');
+    Route::get('drivers/get-districts', [DriverController::class, 'getDistricts'])->name('drivers.get-districts');
+    Route::get('drivers/get-villages', [DriverController::class, 'getVillages'])->name('drivers.get-villages');
+
     // Drivers Management
     Route::resource('drivers', DriverController::class);
     

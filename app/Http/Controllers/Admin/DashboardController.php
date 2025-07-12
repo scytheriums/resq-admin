@@ -57,10 +57,9 @@ class DashboardController extends Controller
             return response()->json(['message' => 'No active FCM tokens found'], 404);
         }
         foreach ($tokens as $token) {
-            // Send notification to each token
             $fcm->send($token, 'Mari Kita Crot', 'Crot sana crot sini crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini');
         }
-        // $fcm->send($token, 'Test Notification', 'This is a test notification from the admin dashboard.');
+        $fcm->send($token, 'Test Notification', 'This is a test notification from the admin dashboard.');
         return response()->json(['message' => 'Notification sent successfully']);
     }
 }
