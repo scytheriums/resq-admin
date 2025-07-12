@@ -172,6 +172,9 @@ class OrderController extends Controller
         $order->driver->is_available = true;
         $order->push();
         
+        $fcm = $order->user->tokens()->first();
+        if($fcm) FcmNotificationService::send($fcm->token, $order->order_number, 'Pesanan anda telah selesai, jangan lupa untuk berikan rating dan review. Terima kasih atas kepercayaan Anda kepada ResQin');
+
         return redirect()->route('admin.orders.index')->with('success', 'Pesanan berhasil diselesaikan.');
     }
 
