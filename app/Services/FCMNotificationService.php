@@ -9,7 +9,7 @@ use Throwable; // Import Throwable
 
 class FCMNotificationService
 {
-    public static function send($fcmToken, $title, $body, $data = [])
+    public static function send($fcmToken, $title, $body, $ext = [])
     {
         try { // <- Mimitian blok try
             $serviceAccountPath = storage_path('app/firebase-service-account.json');
@@ -25,7 +25,6 @@ class FCMNotificationService
 
             $httpClient = new HttpClient();
             $url = "https://fcm.googleapis.com/v1/projects/{$projectId}/messages:send";
-
             $payload = [
                 'message' => [
                     'token' => $fcmToken,
@@ -33,7 +32,7 @@ class FCMNotificationService
                         'title' => $title,
                         'body'  => $body
                     ],
-                    'data' => $data
+                    'data' => $ext
                 ]
             ];
 

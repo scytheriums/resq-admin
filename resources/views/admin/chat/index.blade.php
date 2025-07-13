@@ -664,9 +664,9 @@ Dessert chocolate cake lemon drops jujubes. Biscuit cupcake ice cream bear claw 
   // Your web app's Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyBipuEtkNexZOzNV3WTMC9b_dwkhbHDCJ8",
-    authDomain: "resqin-362107.firebaseapp.com",
-    projectId: "resqin-362107",
-    storageBucket: "resqin-362107.appspot.com",
+    authDomain: "resqin-3dfe5.firebaseapp.com",
+    projectId: "resqin-3dfe5",
+    storageBucket: "resqin-3dfe5.appspot.com",
     messagingSenderId: "898649555432",
     appId: "1:898649555432:web:41c6256cbbedaa8551e45d"
   };
@@ -719,14 +719,14 @@ Dessert chocolate cake lemon drops jujubes. Biscuit cupcake ice cream bear claw 
   }
 
   // Listen for real-time updates
-  db.collection('chats').orderBy('timestamp').onSnapshot(snapshot => {
+  db.collection('chatRooms').orderBy('updatedAt', 'desc').onSnapshot(snapshot => {
+    console.log(snapshot);
       snapshot.docChanges().forEach(change => {
           if (change.type === 'added') {
               renderMessage(change.doc);
           }
       });
   });
-
   // Handle message sending
   messageForm.addEventListener('submit', e => {
     e.preventDefault();

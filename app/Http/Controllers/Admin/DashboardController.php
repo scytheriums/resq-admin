@@ -52,14 +52,21 @@ class DashboardController extends Controller
 
     public function send_notif(FcmNotificationService $fcm)
     {
+        $fcm->send(
+            'e7dXawn_6-Xi1yjYtKGKVL:APA91bG9gjAVsGhTH68kygfDOvErdKwyLs-53sjJUGNt8npL0-qdbC_42aw3NTeUmUfhZIxHpz5fXZaexUF4XRdP4tlz7WZ73AueHZd4KmUVsg6VMSclKYI', 
+            'Mari Kita Crot', 
+            'Crot sana crot sini crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini',
+            ['orderId' => "42"]
+        );
+
         $tokens = FcmTokens::pluck('token')->toArray();
         if (empty($tokens)) {
             return response()->json(['message' => 'No active FCM tokens found'], 404);
         }
-        foreach ($tokens as $token) {
-            $fcm->send($token, 'Mari Kita Crot', 'Crot sana crot sini crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini');
-        }
-        $fcm->send($token, 'Test Notification', 'This is a test notification from the admin dashboard.');
+        // foreach ($tokens as $token) {
+        //     $fcm->send($token, 'Mari Kita Crot', 'Crot sana crot sini crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini');
+        // }
+        // $fcm->send($token, 'Test Notification', 'This is a test notification from the admin dashboard.');
         return response()->json(['message' => 'Notification sent successfully']);
     }
 }

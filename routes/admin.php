@@ -19,8 +19,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('notif-test', [DashboardController::class, 'send_notif'])->name('send_notif');
     Route::get('chat', [ChatController::class, 'index'])->name('chat.index');
-    Route::post('chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
-    Route::get('chat/messages', [ChatController::class, 'getMessages'])->name('chat.messages');
+    Route::post('chat/send', [ChatController::class, 'sendMessage'])->name('chat.sendMessage');
+    Route::get('chat/messages', [ChatController::class, 'getMessages'])->name('chat.getMessages');
     // Orders Management
     Route::resource('orders', OrderController::class);
     Route::get('orders/{order}/complete', [OrderController::class, 'complete'])->name('orders.complete');

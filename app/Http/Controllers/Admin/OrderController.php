@@ -160,7 +160,7 @@ class OrderController extends Controller
                 $fcm->token, 
                 $order->order_number, 
                 'Pesanan telah dikonfirmasi oleh admin, silahkan meninjau pesanan Anda di aplikasi dan melakukan pembayaran biaya akhir',
-                ['orderId' => $order->id]
+                ['orderId' => (string)$order->id]
             );
             
         // } catch (\Exception $e) {
@@ -182,7 +182,7 @@ class OrderController extends Controller
             $fcm->token, 
             $order->order_number, 
             'Pesanan anda telah selesai, jangan lupa untuk berikan rating dan review. Terima kasih atas kepercayaan Anda kepada ResQin',
-            ['orderId' => $order->id]
+            ['orderId' => (string)$order->id]
         );
 
         return redirect()->route('admin.orders.index')->with('success', 'Pesanan berhasil diselesaikan.');
