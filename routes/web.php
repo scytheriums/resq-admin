@@ -1,11 +1,12 @@
 <?php
 
+
 use Illuminate\Support\Facades\Route;
 
 // Authentication Routes
 require __DIR__.'/auth.php';
 
-// Admin Routes
+// Auth::routes();
 require __DIR__.'/admin.php';
 
 // Public Routes

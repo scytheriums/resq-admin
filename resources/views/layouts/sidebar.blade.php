@@ -38,6 +38,13 @@
             <div>Pesanan</div>
           </a>
         </li>
+
+        <li class="menu-item {{ request()->is('admin/chat*') ? 'active' : '' }}">
+          <a href="{{ route('admin.chat.index') }}" class="menu-link">
+            <i class="menu-icon tf-icons ti ti-message"></i>
+            <div>Chat</div>
+          </a>
+        </li>
       @endif
 
       <li class="menu-header small text-uppercase">

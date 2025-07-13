@@ -13,11 +13,14 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\ChatController;
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('notif-test', [DashboardController::class, 'send_notif'])->name('send_notif');
-
+    Route::get('chat', [ChatController::class, 'index'])->name('chat.index');
+    Route::post('chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+    Route::get('chat/messages', [ChatController::class, 'getMessages'])->name('chat.messages');
     // Orders Management
     Route::resource('orders', OrderController::class);
     Route::get('orders/{order}/complete', [OrderController::class, 'complete'])->name('orders.complete');

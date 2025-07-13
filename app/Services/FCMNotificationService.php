@@ -9,7 +9,7 @@ use Throwable; // Import Throwable
 
 class FCMNotificationService
 {
-    public static function send($fcmToken, $title, $body)
+    public static function send($fcmToken, $title, $body, $data = [])
     {
         try { // <- Mimitian blok try
             $serviceAccountPath = storage_path('app/firebase-service-account.json');
@@ -31,14 +31,9 @@ class FCMNotificationService
                     'token' => $fcmToken,
                     'notification' => [
                         'title' => $title,
-                        'body'  => $body,
-                        // 'icon'  => 'https://resq-mu.vercel.app/icons/icon-192x192.png',
-                        // 'badge' => 'https://resq-mu.vercel.app/icons/badge-72x72.png'
+                        'body'  => $body
                     ],
-                    // Pindahkeun sadaya data tambahan ka dieu
-                    'data' => [
-                        'url' => 'https://resq-mu.vercel.app/transaksi' // <-- konci 'url' di jero 'data'
-                    ]
+                    'data' => $data
                 ]
             ];
 

@@ -156,7 +156,12 @@ class OrderController extends Controller
 
             // firebase cloud messaging
             $fcm = $order->user->tokens()->first();
-            if($fcm) FcmNotificationService::send($fcm->token, $order->order_number, 'Pesanan telah dikonfirmasi oleh admin, silahkan meninjau pesanan Anda di aplikasi dan melakukan pembayaran biaya akhir');
+            if($fcm) FcmNotificationService::send(
+                $fcm->token, 
+                $order->order_number, 
+                'Pesanan telah dikonfirmasi oleh admin, silahkan meninjau pesanan Anda di aplikasi dan melakukan pembayaran biaya akhir',
+                ['orderId' => $order->id]
+            );
             
         // } catch (\Exception $e) {
         //     DB::rollBack();
@@ -173,7 +178,12 @@ class OrderController extends Controller
         $order->push();
         
         $fcm = $order->user->tokens()->first();
-        if($fcm) FcmNotificationService::send($fcm->token, $order->order_number, 'Pesanan anda telah selesai, jangan lupa untuk berikan rating dan review. Terima kasih atas kepercayaan Anda kepada ResQin');
+        if($fcm) FcmNotificationService::send(
+            $fcm->token, 
+            $order->order_number, 
+            'Pesanan anda telah selesai, jangan lupa untuk berikan rating dan review. Terima kasih atas kepercayaan Anda kepada ResQin',
+            ['orderId' => $order->id]
+        );
 
         return redirect()->route('admin.orders.index')->with('success', 'Pesanan berhasil diselesaikan.');
     }
