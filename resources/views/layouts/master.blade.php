@@ -60,6 +60,11 @@
         .notification-list-scroll::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
+        @media (min-width: 1400px) {
+            .container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container {
+                max-width: 100% !important;
+            }
+        }
         </style>
     @yield('vendor-css')
 
