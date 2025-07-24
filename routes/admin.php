@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\DestinationController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('chat', [ChatController::class, 'index'])->name('chat.index');
     Route::post('chat/send', [ChatController::class, 'sendMessage'])->name('chat.sendMessage');
     Route::get('chat/messages', [ChatController::class, 'getMessages'])->name('chat.getMessages');
+    Route::get('chat/rooms', [ChatController::class, 'getChatRooms'])->name('chat.getRooms');
     // Orders Management
     Route::resource('orders', OrderController::class);
     Route::get('orders/{order}/complete', [OrderController::class, 'complete'])->name('orders.complete');
@@ -57,6 +59,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // Users Management
     Route::resource('users', UserController::class);
+
+    Route::resource('reviews', ReviewController::class);
+
 
     // Roles & Permissions
     Route::resource('roles', RoleController::class)->names('roles');

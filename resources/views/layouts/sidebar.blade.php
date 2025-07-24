@@ -45,6 +45,13 @@
             <div>Chat</div>
           </a>
         </li>
+
+        <li class="menu-item {{ request()->is('admin/reviews*') ? 'active' : '' }}">
+          <a href="{{ route('admin.reviews.index') }}" class="menu-link">
+            <i class="menu-icon tf-icons ti ti-star"></i>
+            <div>Rate & Review</div>
+          </a>
+        </li>
       @endif
 
       <li class="menu-header small text-uppercase">

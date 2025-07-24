@@ -15,6 +15,8 @@ class ChatController extends Controller
     {
         $this->firestore = new FirestoreClient([
             'projectId' => config('firestore.project_id'),
+            'keyFilePath' => config('firestore.credentials'),
+            'transport' => 'rest',
         ]);
     }
 
@@ -25,39 +27,42 @@ class ChatController extends Controller
         return view('admin.chat.index', compact('title', 'currentUser'));
     }
 
+    public function getChatRooms()
+    {
+        $chatRoomsCollection = $this->firestore->collection('chatRooms')->orderBy('updatedAt', 'DESC');
+        $documents = $chatRoomsCollection->documents();
+        $chatRooms = [];
+        foreach ($documents as $document) {
+            if ($document->exists()) {
+                $chatRooms[] = array_merge(['id' => $document->id()], $document->data());
+            }
+        }
+        return response()->json($chatRooms);
+    }
+
     public function sendMessage(Request $request)
     {
         $request->validate([
             'message' => 'required|string',
+            'chatRoomId' => 'required|string',
         ]);
 
-        $collectionReference = $this->firestore->collection('chats');
-        $collectionReference->add([
-            'user' => Auth::user()->name,
-            'message' => $request->message,
+        $chatRoomRef = $this->firestore->collection('chatRooms')->document($request->chatRoomId);
+        $messagesCollection = $chatRoomRef->collection('messages');
+
+        // Add the new message to the subcollection
+        $messagesCollection->add([
+            'senderId' => 'admin',
+            'text' => $request->message,
             'timestamp' => new \Google\Cloud\Core\Timestamp(new \DateTime()),
         ]);
 
+        // Update the chat room's metadata
+        $chatRoomRef->set([
+            'updatedAt' => new \Google\Cloud\Core\Timestamp(new \DateTime()),
+            'lastMessage' => $request->message,
+        ], ['merge' => true]);
+
         return response()->json(['status' => 'success']);
-    }
-
-    public function getMessages()
-    {
-        $collectionReference = $this->firestore->collection('chats')->orderBy('timestamp');
-        $documents = $collectionReference->documents();
-
-        $messages = [];
-        foreach ($documents as $document) {
-            if ($document->exists()) {
-                $data = $document->data();
-                $messages[] = [
-                    'user' => $data['user'],
-                    'message' => $data['message'],
-                    'timestamp' => $data['timestamp']->get()->format('Y-m-d H:i:s'),
-                ];
-            }
-        }
-
-        return response()->json($messages);
     }
 }

@@ -24,5 +24,5 @@ return [
     |
     */
 
-    'credentials' => env('FIRESTORE_CREDENTIALS', storage_path('app/firestore/google_credentials.json')),
+    'credentials' => storage_path(env('FIRESTORE_CREDENTIALS', 'app/firestore/google_credentials.json')),
 ];

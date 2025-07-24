@@ -168,181 +168,30 @@ Dessert chocolate cake lemon drops jujubes. Biscuit cupcake ice cream bear claw 
             </div>
             <!-- Chats -->
             <ul class="list-unstyled chat-contact-list" id="chat-list">
-              <li class="chat-contact-list-item chat-list-item-0 d-none">
-                <h6 class="text-muted mb-0">No Chats Found</h6>
-              </li>
-              <li class="chat-contact-list-item">
-                <a class="d-flex align-items-center">
-                  <div class="flex-shrink-0 avatar avatar-online">
-                    <img src="../../assets/img/avatars/13.png" alt="Avatar" class="rounded-circle" />
-                  </div>
-                  <div class="chat-contact-info flex-grow-1 ms-2">
-                    <h6 class="chat-contact-name text-truncate m-0">Waldemar Mannering</h6>
-                    <p class="chat-contact-status text-muted text-truncate mb-0">
-                      Refer friends. Get rewards.
-                    </p>
-                  </div>
-                  <small class="text-muted mb-auto">5 Minutes</small>
-                </a>
-              </li>
-              <li class="chat-contact-list-item active">
-                <a class="d-flex align-items-center">
-                  <div class="flex-shrink-0 avatar avatar-offline">
-                    <img src="../../assets/img/avatars/2.png" alt="Avatar" class="rounded-circle" />
-                  </div>
-                  <div class="chat-contact-info flex-grow-1 ms-2">
-                    <h6 class="chat-contact-name text-truncate m-0">Felecia Rower</h6>
-                    <p class="chat-contact-status text-muted text-truncate mb-0">
-                      I will purchase it for sure. 👍
-                    </p>
-                  </div>
-                  <small class="text-muted mb-auto">30 Minutes</small>
-                </a>
-              </li>
-              <li class="chat-contact-list-item">
-                <a class="d-flex align-items-center">
-                  <div class="flex-shrink-0 avatar avatar-busy">
-                    <span class="avatar-initial rounded-circle bg-label-success">CM</span>
-                  </div>
-                  <div class="chat-contact-info flex-grow-1 ms-2">
-                    <h6 class="chat-contact-name text-truncate m-0">Calvin Moore</h6>
-                    <p class="chat-contact-status text-muted text-truncate mb-0">
-                      If it takes long you can mail inbox user
-                    </p>
-                  </div>
-                  <small class="text-muted mb-auto">1 Day</small>
-                </a>
-              </li>
-            </ul>
-            <!-- Contacts -->
-            <ul class="list-unstyled chat-contact-list mb-0" id="contact-list">
-              <li class="chat-contact-list-item chat-contact-list-item-title">
-                <h5 class="text-primary mb-0">Contacts</h5>
-              </li>
-              <li class="chat-contact-list-item contact-list-item-0 d-none">
-                <h6 class="text-muted mb-0">No Contacts Found</h6>
-              </li>
-              <li class="chat-contact-list-item">
-                <a class="d-flex align-items-center">
-                  <div class="flex-shrink-0 avatar avatar-offline">
-                    <img src="../../assets/img/avatars/4.png" alt="Avatar" class="rounded-circle" />
-                  </div>
-                  <div class="chat-contact-info flex-grow-1 ms-2">
-                    <h6 class="chat-contact-name text-truncate m-0">Natalie Maxwell</h6>
-                    <p class="chat-contact-status text-muted text-truncate mb-0">UI/UX Designer</p>
-                  </div>
-                </a>
-              </li>
-              <li class="chat-contact-list-item">
-                <a class="d-flex align-items-center">
-                  <div class="flex-shrink-0 avatar avatar-busy">
-                    <img src="../../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" />
-                  </div>
-                  <div class="chat-contact-info flex-grow-1 ms-2">
-                    <h6 class="chat-contact-name text-truncate m-0">Jess Cook</h6>
-                    <p class="chat-contact-status text-muted text-truncate mb-0">Business Analyst</p>
-                  </div>
-                </a>
-              </li>
-              <li class="chat-contact-list-item">
-                <a class="d-flex align-items-center">
-                  <div class="avatar d-block flex-shrink-0">
-                    <span class="avatar-initial rounded-circle bg-label-primary">LM</span>
-                  </div>
-                  <div class="chat-contact-info flex-grow-1 ms-2">
-                    <h6 class="chat-contact-name text-truncate m-0">Louie Mason</h6>
-                    <p class="chat-contact-status text-muted text-truncate mb-0">Resource Manager</p>
-                  </div>
-                </a>
-              </li>
-              <li class="chat-contact-list-item">
-                <a class="d-flex align-items-center">
-                  <div class="flex-shrink-0 avatar avatar-busy">
-                    <img src="../../assets/img/avatars/7.png" alt="Avatar" class="rounded-circle" />
-                  </div>
-                  <div class="chat-contact-info flex-grow-1 ms-2">
-                    <h6 class="chat-contact-name text-truncate m-0">Krystal Norton</h6>
-                    <p class="chat-contact-status text-muted text-truncate mb-0">Business Executive</p>
-                  </div>
-                </a>
-              </li>
-              <li class="chat-contact-list-item">
-                <a class="d-flex align-items-center">
-                  <div class="flex-shrink-0 avatar avatar-offline">
-                    <img src="../../assets/img/avatars/8.png" alt="Avatar" class="rounded-circle" />
-                  </div>
-                  <div class="chat-contact-info flex-grow-1 ms-2">
-                    <h6 class="chat-contact-name text-truncate m-0">Stacy Garrison</h6>
-                    <p class="chat-contact-status text-muted text-truncate mb-0">Marketing Ninja</p>
-                  </div>
-                </a>
-              </li>
-              <li class="chat-contact-list-item">
-                <a class="d-flex align-items-center">
-                  <div class="avatar d-block flex-shrink-0">
-                    <span class="avatar-initial rounded-circle bg-label-success">CM</span>
-                  </div>
-                  <div class="chat-contact-info flex-grow-1 ms-2">
-                    <h6 class="chat-contact-name text-truncate m-0">Calvin Moore</h6>
-                    <p class="chat-contact-status text-muted text-truncate mb-0">UX Engineer</p>
-                  </div>
-                </a>
-              </li>
-              <li class="chat-contact-list-item">
-                <a class="d-flex align-items-center">
-                  <div class="flex-shrink-0 avatar avatar-busy">
-                    <img src="../../assets/img/avatars/10.png" alt="Avatar" class="rounded-circle" />
-                  </div>
-                  <div class="chat-contact-info flex-grow-1 ms-2">
-                    <h6 class="chat-contact-name text-truncate m-0">Mary Giles</h6>
-                    <p class="chat-contact-status text-muted text-truncate mb-0">Account Department</p>
-                  </div>
-                </a>
-              </li>
-              <li class="chat-contact-list-item">
-                <a class="d-flex align-items-center">
-                  <div class="flex-shrink-0 avatar avatar-offline">
-                    <img src="../../assets/img/avatars/13.png" alt="Avatar" class="rounded-circle" />
-                  </div>
-                  <div class="chat-contact-info flex-grow-1 ms-2">
-                    <h6 class="chat-contact-name text-truncate m-0">Waldemar Mannering</h6>
-                    <p class="chat-contact-status text-muted text-truncate mb-0">AWS Support</p>
-                  </div>
-                </a>
-              </li>
-              <li class="chat-contact-list-item">
-                <a class="d-flex align-items-center">
-                  <div class="avatar d-block flex-shrink-0">
-                    <span class="avatar-initial rounded-circle bg-label-danger">AJ</span>
-                  </div>
-                  <div class="chat-contact-info flex-grow-1 ms-2">
-                    <h6 class="chat-contact-name text-truncate m-0">Amy Johnson</h6>
-                    <p class="chat-contact-status text-muted text-truncate mb-0">Frontend Developer</p>
-                  </div>
-                </a>
-              </li>
-              <li class="chat-contact-list-item">
-                <a class="d-flex align-items-center">
-                  <div class="flex-shrink-0 avatar avatar-offline">
-                    <img src="../../assets/img/avatars/2.png" alt="Avatar" class="rounded-circle" />
-                  </div>
-                  <div class="chat-contact-info flex-grow-1 ms-2">
-                    <h6 class="chat-contact-name text-truncate m-0">Felecia Rower</h6>
-                    <p class="chat-contact-status text-muted text-truncate mb-0">Cloud Engineer</p>
-                  </div>
-                </a>
-              </li>
-              <li class="chat-contact-list-item">
-                <a class="d-flex align-items-center">
-                  <div class="flex-shrink-0 avatar avatar-busy">
-                    <img src="../../assets/img/avatars/11.png" alt="Avatar" class="rounded-circle" />
-                  </div>
-                  <div class="chat-contact-info flex-grow-1 ms-2">
-                    <h6 class="chat-contact-name text-truncate m-0">William Stephens</h6>
-                    <p class="chat-contact-status text-muted text-truncate mb-0">Backend Developer</p>
-                  </div>
-                </a>
-              </li>
+              @if(empty($chatRooms))
+                <li class="chat-contact-list-item chat-list-item-0">
+                  <h6 class="text-muted mb-0">No Chats Found</h6>
+                </li>
+              @else
+                @foreach($chatRooms as $room)
+                  <li class="chat-contact-list-item" data-room-id="{{ $room['id'] }}" data-user-name="{{ $room['userName'] ?? 'Unknown User' }}">
+                    <a class="d-flex align-items-center">
+                      <div class="flex-shrink-0 avatar avatar-online">
+                        <img src="{{ asset('assets/img/avatars/2.png') }}" alt="Avatar" class="rounded-circle" />
+                      </div>
+                      <div class="chat-contact-info flex-grow-1 ms-2">
+                        <h6 class="chat-contact-name text-truncate m-0">{{ $room['userName'] ?? 'Unknown User' }}</h6>
+                        <p class="chat-contact-status text-muted text-truncate mb-0">
+                          {{ $room['lastMessage'] ?? 'No messages yet' }}
+                        </p>
+                      </div>
+                      @if(isset($room['updatedAt']))
+                      <small class="text-muted mb-auto">{{ \Carbon\Carbon::parse($room['updatedAt']->get()->format('Y-m-d H:i:s'))->diffForHumans() }}</small>
+                      @endif
+                    </a>
+                  </li>
+                @endforeach
+              @endif
             </ul>
           </div>
         </div>
@@ -674,22 +523,31 @@ Dessert chocolate cake lemon drops jujubes. Biscuit cupcake ice cream bear claw 
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
-  const chatHistory = document.querySelector('.chat-history-body ul.chat-history');
+
+  // DOM Elements
+  const chatHistoryBody = document.querySelector('.chat-history-body');
+  const chatHistory = chatHistoryBody.querySelector('ul.chat-history');
   const messageForm = document.querySelector('.form-send-message');
   const messageInput = document.querySelector('.form-send-message .message-input');
-  const currentUserName = "{{ $currentUser->name }}";
+  const chatList = document.getElementById('chat-list');
+  const chatHeader = document.querySelector('.chat-history-header');
+
+  // App state
+  let activeChatRoomId = null;
+  let unsubscribe = null; // To store the listener detachment function
 
   // Function to render a message
   function renderMessage(doc) {
     const data = doc.data();
-    const messageClass = data.user === currentUserName ? 'chat-message-right' : '';
-    const avatar = data.user === currentUserName ? '{{ asset('assets/img/avatars/1.png') }}' : '{{ asset('assets/img/avatars/2.png') }}';
-    const formattedTime = new Date(data.timestamp.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    // 'admin' is the senderId for admin messages
+    const messageClass = data.senderId === 'admin' ? 'chat-message-right' : '';
+    const avatar = data.senderId === 'admin' ? '{{ asset('assets/img/avatars/1.png') }}' : '{{ asset('assets/img/avatars/2.png') }}';
+    const formattedTime = data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
 
     const messageHTML = `
       <li class="chat-message ${messageClass}">
         <div class="d-flex overflow-hidden">
-          ${data.user !== currentUserName ? `
+          ${data.senderId !== 'admin' ? `
           <div class="user-avatar flex-shrink-0 me-3">
             <div class="avatar avatar-sm">
               <img src="${avatar}" alt="Avatar" class="rounded-circle" />
@@ -698,13 +556,13 @@ Dessert chocolate cake lemon drops jujubes. Biscuit cupcake ice cream bear claw 
           ` : ''}
           <div class="chat-message-wrapper flex-grow-1">
             <div class="chat-message-text">
-              <p class="mb-0">${data.message}</p>
+              <p class="mb-0">${data.text}</p>
             </div>
-            <div class="text-muted mt-1 ${data.user === currentUserName ? 'text-end' : 'text-start'}">
+            <div class="text-muted mt-1 ${data.senderId === 'admin' ? 'text-end' : 'text-start'}">
               <small>${formattedTime}</small>
             </div>
           </div>
-          ${data.user === currentUserName ? `
+          ${data.senderId === 'admin' ? `
           <div class="user-avatar flex-shrink-0 ms-3">
             <div class="avatar avatar-sm">
               <img src="${avatar}" alt="Avatar" class="rounded-circle" />
@@ -715,30 +573,59 @@ Dessert chocolate cake lemon drops jujubes. Biscuit cupcake ice cream bear claw 
       </li>
     `;
     chatHistory.insertAdjacentHTML('beforeend', messageHTML);
-    chatHistory.scrollTop = chatHistory.scrollHeight;
+    chatHistoryBody.scrollTop = chatHistoryBody.scrollHeight;
   }
 
-  // Listen for real-time updates
-  db.collection('chatRooms').orderBy('updatedAt', 'desc').onSnapshot(snapshot => {
-    console.log(snapshot);
-      snapshot.docChanges().forEach(change => {
+  // Function to load messages for a room
+  function loadChatRoom(roomId, userName) {
+    activeChatRoomId = roomId;
+
+    // Update UI
+    document.querySelectorAll('#chat-list .chat-contact-list-item').forEach(el => el.classList.remove('active'));
+    document.querySelector(`[data-room-id='${roomId}']`).classList.add('active');
+    chatHeader.querySelector('h6').textContent = userName;
+    chatHistory.innerHTML = ''; // Clear previous messages
+
+    // Detach previous listener if it exists
+    if (unsubscribe) {
+      unsubscribe();
+    }
+
+    // Listen for new messages in the selected room
+    unsubscribe = db.collection('chatRooms').doc(roomId).collection('messages').orderBy('timestamp')
+      .onSnapshot(snapshot => {
+        snapshot.docChanges().forEach(change => {
           if (change.type === 'added') {
-              renderMessage(change.doc);
+            renderMessage(change.doc);
           }
+        });
       });
+  }
+
+  // Event listener for chat room selection
+  chatList.addEventListener('click', e => {
+    const listItem = e.target.closest('.chat-contact-list-item');
+    if (listItem && listItem.dataset.roomId) {
+      const { roomId, userName } = listItem.dataset;
+      loadChatRoom(roomId, userName);
+    }
   });
+
   // Handle message sending
   messageForm.addEventListener('submit', e => {
     e.preventDefault();
     const message = messageInput.value.trim();
-    if (message) {
+    if (message && activeChatRoomId) {
       fetch('{{ route('admin.chat.sendMessage') }}', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'X-CSRF-TOKEN': '{{ csrf_token() }}'
         },
-        body: JSON.stringify({ message: message })
+        body: JSON.stringify({ 
+          message: message,
+          chatRoomId: activeChatRoomId
+        })
       })
       .then(response => response.json())
       .then(data => {
@@ -752,9 +639,55 @@ Dessert chocolate cake lemon drops jujubes. Biscuit cupcake ice cream bear claw 
     }
   });
 
-  // Clear existing static messages on load
-  chatHistory.innerHTML = '';
+  // Initially, no room is selected
+  chatHistory.innerHTML = '<p class="text-center text-muted mt-5">Please select a chat to start messaging.</p>';
 
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const chatList = document.getElementById('chat-list');
+
+        async function fetchChatRooms() {
+            try {
+                const response = await fetch('{{ route("admin.chat.getRooms") }}');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const chatRooms = await response.json();
+
+                // Clear existing static items if any
+                chatList.innerHTML = '';
+
+                chatRooms.forEach(room => {
+                    const lastMessage = room.lastMessage ? room.lastMessage.substring(0, 30) + '...' : 'No messages yet';
+                    const userImage = room.userImage ? room.userImage : '{{ asset("assets/img/avatars/default.png") }}';
+                    const unreadCount = room.unreadCount > 0 ? `<span class="badge bg-danger rounded-pill ms-auto">${room.unreadCount}</span>` : '';
+
+                    const roomElement = `
+                        <li class="chat-contact-list-item">
+                            <a class="d-flex align-items-center" href="#">
+                                <div class="flex-shrink-0 avatar avatar-online">
+                                    <img src="${userImage}" alt="Avatar" class="rounded-circle" />
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="chat-contact-name text-truncate m-0">${room.userName || 'Unknown User'}</h6>
+                                    <p class="chat-contact-status text-truncate m-0">${lastMessage}</p>
+                                </div>
+                                ${unreadCount}
+                            </a>
+                        </li>
+                    `;
+                    chatList.insertAdjacentHTML('beforeend', roomElement);
+                });
+
+            } catch (error) {
+                console.error('Failed to fetch chat rooms:', error);
+                chatList.innerHTML = '<li class="p-4 text-center">Could not load chats.</li>';
+            }
+        }
+
+        fetchChatRooms();
+    });
 </script>
 <script src="{{ asset('assets/js/app-chat.js') }}"></script>
 @endpush
