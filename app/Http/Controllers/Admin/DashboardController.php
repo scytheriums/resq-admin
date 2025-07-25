@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Driver;
 use Carbon\Carbon;
@@ -11,6 +10,12 @@ use App\Models\FCMTokens; // Import model for FCM tokens if needed
 
 class DashboardController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware(['permission:read-dashboard'], ['only' => ['index', 'show']]);
+    }
+
     public function index()
     {
         // Get today's statistics
