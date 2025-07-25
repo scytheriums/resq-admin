@@ -13,6 +13,7 @@
     <div class="menu-inner-shadow"></div>
   
     <ul class="menu-inner py-1">
+      @if (auth()->user()->can('read-dashboard'))
       <li class="menu-item {{ request()->is('admin/dashboard*') ? 'active open' : '' }}">
         <a href="javascript:void(0);" class="menu-link menu-toggle">
           <i class="menu-icon tf-icons ti ti-smart-home"></i>
@@ -26,6 +27,7 @@
           </li>
         </ul>
       </li>
+      @endif
 
       @if (auth()->user()->can('read-order'))
         <li class="menu-header small text-uppercase">

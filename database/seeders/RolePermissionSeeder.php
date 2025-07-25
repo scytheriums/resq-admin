@@ -22,6 +22,7 @@ class RolePermissionSeeder extends Seeder
 
         // Create Permissions
         $permissions = [
+            ['name' => 'Read Dashboard', 'slug' => 'read-dashboard'],
             // User Permissions
             ['name' => 'Create Users', 'slug' => 'create-users'],
             ['name' => 'Read Users', 'slug' => 'read-users'],
