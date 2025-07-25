@@ -409,7 +409,7 @@
                     breakdownHtml = '<small class="text-muted">Tidak ada layanan tambahan</small>';
                 }
 
-                const totalBill = basePrice + bookingFee + servicesFee;
+                const totalBill = basePrice + servicesFee;
 
                 $('#additionalServicesFee').text(formatCurrency(servicesFee));
                 $('#additionalServicesBreakdown').html(breakdownHtml);
