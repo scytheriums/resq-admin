@@ -264,21 +264,34 @@
                             @endif
                         </div>
 
-                        <!-- Editable Additional Services -->
-                        <div @if(in_array($order->order_status, ['created', 'booked']))
-                                data-intro="<h5>Layanan Tambahan</h5><p>Pilih layanan tambahan yang diperlukan. Harga akan otomatis diperbarui di rincian pembayaran.</p>"
-                                data-step="3"
-                             @endif>
-                            <label for="additionalServices" class="form-label">Layanan Tambahan</label>
-                            <select class="select2 form-select" id="additionalServices" name="additional_services[]" multiple>
-                                @foreach($additionalServices as $service)
-                                    <option value="{{ $service->id }}" 
-                                        data-price="{{ $service->price }}"
-                                        {{ in_array($service->id, $order->additionalServices->pluck('id')->toArray()) ? 'selected' : '' }}>
-                                        {{ $service->name }}
-                                    </option>
-                                @endforeach
-                            </select>
+                        <!-- Additional Services -->
+                        <div>
+                            <label class="form-label">Layanan Tambahan</label>
+                            @if(in_array($order->order_status, ['created', 'booked']))
+                                <div data-intro="<h5>Layanan Tambahan</h5><p>Pilih layanan tambahan yang diperlukan. Harga akan otomatis diperbarui di rincian pembayaran.</p>" data-step="3">
+                                    <select class="select2 form-select" id="additionalServices" name="additional_services[]" multiple>
+                                        @foreach($additionalServices as $service)
+                                            <option value="{{ $service->id }}" 
+                                                data-price="{{ $service->price }}"
+                                                {{ in_array($service->id, $order->additionalServices->pluck('id')->toArray()) ? 'selected' : '' }}>
+                                                {{ $service->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @else
+                                @if($order->additionalServices->count() > 0)
+                                    <ul class="list-group">
+                                        @foreach($order->additionalServices as $service)
+                                            <li class="list-group-item">
+                                                <p class="info-value mb-0">{{ $service->name }}</p>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <p class="text-muted">Tidak ada layanan tambahan</p>
+                                @endif
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -393,15 +406,14 @@
             function updatePriceSummary() {
                 let servicesFee = 0;
                 let breakdownHtml = '';
-
-                $('#additionalServices option:selected').each(function() {
-                    const price = parseFloat($(this).data('price'));
-                    const name = $(this).text().trim();
-                    servicesFee += price;
+                let selectedServices = {!! $order->additionalServices->count() > 0 ? json_encode($order->additionalServices) : [] !!};
+                
+                selectedServices.forEach(service => {
+                    servicesFee += service.price;
                     breakdownHtml += `
                         <div class="d-flex justify-content-between mb-1">
-                            <small class="text-muted">• ${name}</small>
-                            <small class="text-muted">${formatCurrency(price)}</small>
+                            <small class="text-muted">• ${service.name}</small>
+                            <small class="text-muted">${formatCurrency(service.price)}</small>
                         </div>`;
                 });
 
