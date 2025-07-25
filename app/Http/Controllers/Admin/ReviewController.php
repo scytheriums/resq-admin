@@ -10,10 +10,10 @@ class ReviewController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware(['permission:read-driver'], ['only' => ['index', 'show']]);
-        // $this->middleware(['permission:create-driver'], ['only' => ['create', 'store']]);
-        // $this->middleware(['permission:update-driver'], ['only' => ['edit', 'update']]);
-        // $this->middleware(['permission:delete-driver'], ['only' => ['destroy']]);
+        $this->middleware(['permission:read-reviews'], ['only' => ['index', 'show']]);
+        $this->middleware(['permission:create-reviews'], ['only' => ['create', 'store']]);
+        $this->middleware(['permission:update-reviews'], ['only' => ['edit', 'update']]);
+        $this->middleware(['permission:delete-reviews'], ['only' => ['destroy']]);
     }
     
     public function index(Request $request)

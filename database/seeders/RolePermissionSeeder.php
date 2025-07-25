@@ -28,6 +28,11 @@ class RolePermissionSeeder extends Seeder
             ['name' => 'Update Users', 'slug' => 'update-users'],
             ['name' => 'Delete Users', 'slug' => 'delete-users'],
 
+            ['name' => 'Create Reviews', 'slug' => 'create-reviews'],
+            ['name' => 'Read Reviews', 'slug' => 'read-reviews'],
+            ['name' => 'Update Reviews', 'slug' => 'update-reviews'],
+            ['name' => 'Delete Reviews', 'slug' => 'delete-reviews'],
+
             // Role Permissions
             ['name' => 'Create Roles', 'slug' => 'create-roles'],
             ['name' => 'Read Roles', 'slug' => 'read-roles'],
