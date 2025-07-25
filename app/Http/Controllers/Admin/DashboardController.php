@@ -11,11 +11,6 @@ use App\Models\FCMTokens; // Import model for FCM tokens if needed
 
 class DashboardController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['permission:read-dashboard'], ['only' => ['index']]);
-    }
-
     public function index()
     {
         // Get today's statistics
