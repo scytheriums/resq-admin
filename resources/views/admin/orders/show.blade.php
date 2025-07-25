@@ -406,7 +406,20 @@
             function updatePriceSummary() {
                 let servicesFee = 0;
                 let breakdownHtml = '';
+                @if(in_array($order->order_status, ['created', 'booked']))
+                $('#additionalServices option:selected').each(function() {
+                    const price = parseFloat($(this).data('price'));
+                    const name = $(this).text().trim();
+                    servicesFee += price;
+                    breakdownHtml += `
+                        <div class="d-flex justify-content-between mb-1">
+                            <small class="text-muted">• ${name}</small>
+                            <small class="text-muted">${formatCurrency(price)}</small>
+                        </div>`;
+                });
+                @else
                 let selectedServices = {{ $order?->additionalServices?->count() > 0 ? json_encode($order->additionalServices ?? []) : '[]' }};
+                @endif
                 
                 selectedServices.forEach(service => {
                     servicesFee += service.price;
