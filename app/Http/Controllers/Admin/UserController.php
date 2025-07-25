@@ -92,7 +92,7 @@ class UserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password_hash' => Hash::make($request->password),
         ]);
 
         if ($request->has('roles')) {
@@ -140,7 +140,7 @@ class UserController extends Controller
         ];
 
         if ($request->filled('password')) {
-            $userData['password'] = Hash::make($request->password);
+            $userData['password_hash'] = Hash::make($request->password);
         }
 
         $user->update($userData);
