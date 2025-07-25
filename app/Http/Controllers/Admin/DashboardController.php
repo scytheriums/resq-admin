@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Driver;
 use Carbon\Carbon;
-use App\Services\FcmNotificationService;
+use App\Services\FCMNotificationService;
 use App\Models\FCMTokens; // Import model for FCM tokens if needed
 
 class DashboardController extends Controller
@@ -50,7 +50,7 @@ class DashboardController extends Controller
         return view('admin.dashboard', compact('summary', 'orderTrend', 'recentOrders', 'driverStatus', 'title'));
     }
 
-    public function send_notif(FcmNotificationService $fcm)
+    public function send_notif(FCMNotificationService $fcm)
     {
         $fcm->send(
             'e7dXawn_6-Xi1yjYtKGKVL:APA91bG9gjAVsGhTH68kygfDOvErdKwyLs-53sjJUGNt8npL0-qdbC_42aw3NTeUmUfhZIxHpz5fXZaexUF4XRdP4tlz7WZ73AueHZd4KmUVsg6VMSclKYI', 

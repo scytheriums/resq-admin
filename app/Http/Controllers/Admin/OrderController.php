@@ -11,7 +11,7 @@ use App\Models\AdditionalService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
-use App\Services\FcmNotificationService;
+use App\Services\FCMNotificationService;
 
 class OrderController extends Controller
 {
@@ -156,7 +156,7 @@ class OrderController extends Controller
 
             // firebase cloud messaging
             $fcm = $order->user->tokens()->first();
-            if($fcm) FcmNotificationService::send(
+            if($fcm) FCMNotificationService::send(
                 $fcm->token, 
                 $order->order_number, 
                 'Pesanan telah dikonfirmasi oleh admin, silahkan meninjau pesanan Anda di aplikasi dan melakukan pembayaran biaya akhir',
@@ -178,7 +178,7 @@ class OrderController extends Controller
         $order->push();
         
         $fcm = $order->user->tokens()->first();
-        if($fcm) FcmNotificationService::send(
+        if($fcm) FCMNotificationService::send(
             $fcm->token, 
             $order->order_number, 
             'Pesanan anda telah selesai, jangan lupa untuk berikan rating dan review. Terima kasih atas kepercayaan Anda kepada ResQin',
