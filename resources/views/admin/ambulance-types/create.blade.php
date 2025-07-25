@@ -19,9 +19,17 @@
                 @csrf
                 <div class="row">
                     <div class="col-md-12 mb-3">
-                        <label for="name" class="form-label">Nama Tipe Ambulance</label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" placeholder="Masukkan nama tipe ambulance" required>
-                        @error('name')
+                        <label for="vehicle_id" class="form-label">Kendaraan Ambulance</label>
+                        <select class="form-select select2 @error('vehicle_id') is-invalid @enderror" 
+                            id="vehicle_id" name="vehicle_id" required>
+                            <option value="">Pilih Kendaraan Ambulance</option>
+                            @foreach($ambulanceVehicles as $vehicle)
+                                <option value="{{ $vehicle->id }}" {{ old('vehicle_id') == $vehicle->id ? 'selected' : '' }}>
+                                    {{ $vehicle->vehicle_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('vehicle_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -94,7 +102,13 @@
 @push('page-js')
     <script>
         $(document).ready(function() {
-            $('.select2').select2({
+            // Initialize vehicle select
+            $('#vehicle_id').select2({
+                placeholder: 'Pilih Kendaraan Ambulance'
+            });
+
+            // Initialize purpose multi-select
+            $('#free_tarif_for_purpose').select2({
                 placeholder: 'Pilih tujuan layanan',
                 allowClear: true,
                 multiple: true

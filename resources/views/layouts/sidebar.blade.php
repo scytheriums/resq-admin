@@ -72,6 +72,12 @@
       @endif
 
       @if (auth()->user()->can('read-ambulance-type'))
+        <li class="menu-item {{ request()->is('admin/ambulance-vehicles*') ? 'active' : '' }}">
+          <a href="{{ route('admin.ambulance-vehicles.index') }}" class="menu-link">
+            <i class="menu-icon tf-icons ti ti-ambulance"></i>
+            <div>Kendaraan Ambulance</div>
+          </a>
+        </li>  
         <li class="menu-item {{ request()->is('admin/ambulance-types*') ? 'active' : '' }}">
           <a href="{{ route('admin.ambulance-types.index') }}" class="menu-link">
             <i class="menu-icon tf-icons ti ti-car"></i>

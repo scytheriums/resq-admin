@@ -48,6 +48,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Additional Services Management
     Route::resource('additional-services', AdditionalServiceController::class);
     
+    // Ambulance Vehicles Management
+    Route::resource('ambulance-vehicles', \App\Http\Controllers\Admin\AmbulanceVehicleController::class);
+    
     // Activity Logs
     Route::get('activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
 

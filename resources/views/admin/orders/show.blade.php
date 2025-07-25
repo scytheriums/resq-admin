@@ -406,7 +406,7 @@
             function updatePriceSummary() {
                 let servicesFee = 0;
                 let breakdownHtml = '';
-                let selectedServices = {!! $order->additionalServices->count() > 0 ? json_encode($order->additionalServices) : [] !!};
+                let selectedServices = {{ $order?->additionalServices?->count() > 0 ? json_encode($order->additionalServices ?? []) : '[]' }};
                 
                 selectedServices.forEach(service => {
                     servicesFee += service.price;

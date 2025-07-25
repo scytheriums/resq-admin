@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\AmbulanceType;
 use App\Models\Driver;
 use App\Models\Purpose;
+use App\Models\AmbulanceVehicle;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -83,14 +84,15 @@ class AmbulanceTypeController extends Controller
     public function create()
     {
         $title = 'Create Ambulance Type';
-        return view('admin.ambulance-types.create', compact('title'));
+        $ambulanceVehicles = AmbulanceVehicle::all();
+        return view('admin.ambulance-types.create', compact('title', 'ambulanceVehicles'));
     }
 
     public function store(Request $request)
     {
         // DB::statement("SELECT setval(pg_get_serial_sequence('ambulance_types', 'id'), coalesce(max(id),0) + 1, false) FROM ambulance_types;");
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:ambulance_types,name',
+            'vehicle_id' => 'required|exists:ambulance_vehicles,id',
             'tarif_dalam_kota' => 'required|numeric|min:0',
             'tarif_km_luar_kota' => 'required|numeric|min:0',
             'tarif_km_luar_provinsi' => 'required|numeric|min:0',
@@ -99,19 +101,22 @@ class AmbulanceTypeController extends Controller
         ]);
 
         $ambulanceType = AmbulanceType::create($validated);
+        $ambulanceType->name = $ambulanceType->ambulanceVehicle->vehicle_name;
+        $ambulanceType->save();
         return redirect()->route('admin.ambulance-types.index')->with('success', 'Ambulance Type created successfully');
     }
 
     public function edit(AmbulanceType $ambulanceType)
     {
         $title = 'Edit Ambulance Type';
-        return view('admin.ambulance-types.edit', compact('ambulanceType', 'title'));
+        $ambulanceVehicles = AmbulanceVehicle::all();
+        return view('admin.ambulance-types.edit', compact('ambulanceType', 'title', 'ambulanceVehicles'));
     }
 
     public function update(Request $request, AmbulanceType $ambulanceType)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:ambulance_types,name,' . $ambulanceType->id,
+            'vehicle_id' => 'required|exists:ambulance_vehicles,id',
             'tarif_dalam_kota' => 'required|numeric|min:0',
             'tarif_km_luar_kota' => 'required|numeric|min:0',
             'tarif_km_luar_provinsi' => 'required|numeric|min:0',
@@ -120,6 +125,8 @@ class AmbulanceTypeController extends Controller
         ]);
 
         $ambulanceType->update($validated);
+        $ambulanceType->name = $ambulanceType->ambulanceVehicle->vehicle_name;
+        $ambulanceType->save();
         return redirect()->route('admin.ambulance-types.index')
             ->with('success', 'Ambulance type updated successfully');
     }
