@@ -28,6 +28,15 @@ class User extends Authenticatable
     ];
 
     /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'provider_id' => 1,
+    ];
+
+    /**
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>
@@ -35,6 +44,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password_hash',    
     ];
+
 
     /**
      * Get the attributes that should be cast.
@@ -51,5 +61,10 @@ class User extends Authenticatable
     public function tokens()
     {
         return $this->hasMany(FcmTokens::class);
+    }
+
+    public function provider()
+    {
+        return $this->belongsTo(Provider::class);
     }
 }

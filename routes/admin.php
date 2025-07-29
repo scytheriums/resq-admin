@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ChatController;
+use App\Http\Controllers\Admin\ProviderController;
 
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -47,6 +48,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     
     // Additional Services Management
     Route::resource('additional-services', AdditionalServiceController::class);
+
+    // Provider
+    Route::resource('providers', ProviderController::class);
     
     // Ambulance Vehicles Management
     Route::resource('ambulance-vehicles', \App\Http\Controllers\Admin\AmbulanceVehicleController::class);

@@ -62,6 +62,15 @@
         <span class="menu-header-text">Data Master</span>
       </li>
 
+      @if (auth()->user()->can('read-providers'))
+        <li class="menu-item {{ request()->is('admin/providers*') ? 'active' : '' }}">
+          <a href="{{ route('admin.providers.index') }}" class="menu-link">
+            <i class="menu-icon tf-icons ti ti-user"></i>
+            <div>Provider</div>
+          </a>
+        </li>
+      @endif
+
       @if (auth()->user()->can('read-driver'))
         <li class="menu-item {{ request()->is('admin/drivers*') ? 'active' : '' }}">
           <a href="{{ route('admin.drivers.index') }}" class="menu-link">
