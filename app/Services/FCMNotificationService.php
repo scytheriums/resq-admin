@@ -6,14 +6,17 @@ use Google\Client;
 use GuzzleHttp\Client as HttpClient;
 use Illuminate\Support\Facades\Log; // Import Log Facade
 use Throwable; // Import Throwable
+use App\Models\Setting;
 
 class FCMNotificationService
 {
     public static function send($fcmToken, $title, $body, $ext = [])
     {
         try { // <- Mimitian blok try
-            $serviceAccountPath = storage_path('app/firebase-service-account.json');
-            $projectId = 'resqin-3dfe5';
+            // $serviceAccountPath = storage_path('app/firebase-service-account.json');
+            // $projectId = 'resqin-3dfe5';
+            $serviceAccountPath = storage_path('app/ambulans-co-firebase-adminsdk-fbsvc-e1b7c4c793.json');
+            $projectId = 'ambulans-co';
 
             $googleClient = new Client();
             $googleClient->setAuthConfig($serviceAccountPath);

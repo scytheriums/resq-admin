@@ -58,9 +58,9 @@ class DashboardController extends Controller
     public function send_notif(FCMNotificationService $fcm)
     {
         $fcm->send(
-            'e7dXawn_6-Xi1yjYtKGKVL:APA91bG9gjAVsGhTH68kygfDOvErdKwyLs-53sjJUGNt8npL0-qdbC_42aw3NTeUmUfhZIxHpz5fXZaexUF4XRdP4tlz7WZ73AueHZd4KmUVsg6VMSclKYI', 
-            'Mari Kita Crot', 
-            'Crot sana crot sini crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini crot sana crot situ crot sini',
+            'ckHM3Xi-SLYvjpMkWsYD-8:APA91bFIVjatq2IWld3-9oNN-9sy41VFn-6jM-KY9uD6qqw4E44q7ZQ4NUxxT40Ewyrt0QNclWwq15VibVuh1jFNwtSF5WHPlYQp8k-wrMqAAOK6HiOUvK0', 
+            'Test notif', 
+            'test body',
             ['orderId' => "42"]
         );
 

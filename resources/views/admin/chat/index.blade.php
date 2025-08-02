@@ -511,13 +511,23 @@ Dessert chocolate cake lemon drops jujubes. Biscuit cupcake ice cream bear claw 
 
 <script>
   // Your web app's Firebase configuration
+  // const firebaseConfig = {
+  //   apiKey: "AIzaSyBipuEtkNexZOzNV3WTMC9b_dwkhbHDCJ8",
+  //   authDomain: "resqin-3dfe5.firebaseapp.com",
+  //   projectId: "resqin-3dfe5",
+  //   storageBucket: "resqin-3dfe5.appspot.com",
+  //   messagingSenderId: "898649555432",
+  //   appId: "1:898649555432:web:41c6256cbbedaa8551e45d"
+  // };
+
   const firebaseConfig = {
-    apiKey: "AIzaSyBipuEtkNexZOzNV3WTMC9b_dwkhbHDCJ8",
-    authDomain: "resqin-3dfe5.firebaseapp.com",
-    projectId: "resqin-3dfe5",
-    storageBucket: "resqin-3dfe5.appspot.com",
-    messagingSenderId: "898649555432",
-    appId: "1:898649555432:web:41c6256cbbedaa8551e45d"
+    apiKey: "AIzaSyAXOCpHmbT0P7GgKCxjZZPk8b49fC5Vbr0",
+    authDomain: "ambulans-co.firebaseapp.com",
+    projectId: "ambulans-co",
+    storageBucket: "ambulans-co.firebasestorage.app",
+    messagingSenderId: "637780719728",
+    appId: "1:637780719728:web:3626df6bd85fc469ac1cb5",
+    measurementId: "G-F1N3FP2274"
   };
 
   // Initialize Firebase
