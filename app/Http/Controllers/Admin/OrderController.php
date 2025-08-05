@@ -105,6 +105,7 @@ class OrderController extends Controller
     
     public function update(Request $request, Order $order)
     {
+        // dd($request->all());
         $request->validate([
             'driver_id' => 'required|exists:drivers,id',
             'additional_services' => 'nullable|array',
@@ -142,6 +143,7 @@ class OrderController extends Controller
                 $order->order_status = 'confirmed';
                 $order->payment_status = 'final_payment_pending';
                 $order->driver->is_available = false;
+                // dd($order);
                 $order->push();
             
             // DB::commit();

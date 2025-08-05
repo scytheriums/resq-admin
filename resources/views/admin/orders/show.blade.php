@@ -162,6 +162,10 @@
                             <p class="info-label mb-1">Status Pembayaran</p>
                             <p class="info-value mb-0"><x-status-badge class="{{ $order->payment_status_class }}" label="{{ $order->payment_status_label }}" /></p>
                         </div>
+                        <div class="col-6 mb-3">
+                            <p class="info-label mb-1">Perjalanan Pulang Pergi</p>
+                            <p class="info-value mb-0"><x-status-badge class="info" label="{{ $order->is_round_trip ? 'Ya' : 'Tidak' }}" /></p>
+                        </div>
                         <div class="col-12">
                             <p class="info-label mb-1">Catatan</p>
                             <p class="info-value mb-0">{{ $order->notes }}</p>
@@ -303,14 +307,22 @@
                         <x-status-badge status="{{ $order->payment_status }}" />
                     </div>
                     <div class="card-body">
+                        @if (in_array($order->payment_status, ['booking_fee_paid', 'final_payment_pending', 'final_payment_paid']))
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="info-label"><s>Biaya Booking</s></span>
+                                <span class="info-value"><s>{{ 'Rp' . number_format($order->booking_fee, 0, ',', '.') }}</s></span>
+                            </div>
+                        @endif
                         <div class="d-flex justify-content-between mb-2">
                             <span class="info-label">Harga Dasar</span>
                             <span class="info-value">{{ 'Rp' . number_format($order->base_price, 0, ',', '.') }}</span>
                         </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="info-label">Biaya Booking</span>
-                            <span class="info-value">{{ 'Rp' . number_format($order->booking_fee, 0, ',', '.') }}</span>
-                        </div>
+                        @if (!in_array($order->payment_status, ['booking_fee_paid', 'final_payment_pending', 'final_payment_paid']))
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="info-label">Biaya Booking</span>
+                                <span class="info-value">{{ 'Rp' . number_format($order->booking_fee, 0, ',', '.') }}</span>
+                            </div>
+                        @endif
                         
                         <!-- Additional Services Breakdown -->
                         <div class="mb-2">
@@ -418,17 +430,16 @@
                         </div>`;
                 });
                 @else
-                let selectedServices = {{ $order?->additionalServices?->count() > 0 ? json_encode($order->additionalServices ?? []) : '[]' }};
+                    let selectedServices = {{ $order?->additionalServices?->count() > 0 ? json_encode($order->additionalServices ?? []) : '[]' }};
+                    selectedServices.forEach(service => {
+                        servicesFee += service.price;
+                        breakdownHtml += `
+                            <div class="d-flex justify-content-between mb-1">
+                                <small class="text-muted">• ${service.name}</small>
+                                <small class="text-muted">${formatCurrency(service.price)}</small>
+                            </div>`;
+                    });
                 @endif
-                
-                selectedServices.forEach(service => {
-                    servicesFee += service.price;
-                    breakdownHtml += `
-                        <div class="d-flex justify-content-between mb-1">
-                            <small class="text-muted">• ${service.name}</small>
-                            <small class="text-muted">${formatCurrency(service.price)}</small>
-                        </div>`;
-                });
 
                 if (breakdownHtml === '') {
                     breakdownHtml = '<small class="text-muted">Tidak ada layanan tambahan</small>';
