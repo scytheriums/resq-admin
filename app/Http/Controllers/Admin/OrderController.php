@@ -130,8 +130,13 @@ class OrderController extends Controller
                     $order->additionalServices()->sync($syncData);
                     $order->additional_services_fee = $additionalServices->sum('price');
                     
-                    // Recalculate total bill
-                    $order->total_bill = $order->base_price + $order->booking_fee + $order->additional_services_fee;
+                    // Recalculate total bill: previous one
+                    // $order->total_bill = $order->base_price + $order->booking_fee + $order->additional_services_fee;
+
+                    // new version
+                    // di BE 'total_bill' sudah dihitung: ambulance_fee + purpose_fee - booking_fee. jadi seharusnya saat dikonfirmasi oleh admin total_bill
+                    // hanya tinggal nambahin biaya additional_service_fee aja, ini yang akan ditagihkan ke customer sebagai final_payment.
+                    $order->total_bill += $order->additional_services_fee;
                 }
                 
                 $order->order_status = 'confirmed';
