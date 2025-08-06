@@ -78,7 +78,7 @@ class AdditionalServiceController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $service->update($validated);
+        $additionalService->update($validated);
         return redirect()->route('admin.additional-services.index')->with('success', 'Service updated successfully');
     }
 

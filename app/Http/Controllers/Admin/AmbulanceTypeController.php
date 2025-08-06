@@ -125,7 +125,7 @@ class AmbulanceTypeController extends Controller
         ]);
 
         $ambulanceType->update($validated);
-        $ambulanceType->name = $ambulanceType->ambulanceVehicle->vehicle_name;
+        $ambulanceType->name = $ambulanceType->ambulanceVehicle?->vehicle_name ?? '';
         $ambulanceType->save();
         return redirect()->route('admin.ambulance-types.index')
             ->with('success', 'Ambulance type updated successfully');

@@ -27,4 +27,9 @@ class AmbulanceType extends Model
     {
         return $this->hasMany(Order::class);
     }
+
+    public function ambulanceVehicle()
+    {
+        return $this->belongsTo(AmbulanceVehicle::class, 'vehicle_id');
+    }
 }
