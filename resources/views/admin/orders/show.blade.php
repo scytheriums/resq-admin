@@ -273,7 +273,9 @@
                                 data-step="2"
                              @endif>
                             <label for="driverSelect" class="form-label">Driver</label>
-                            @if (!in_array($order->order_status, ['created', 'booked']) && $order->driver)
+                            @if($order->payment_status === 'booking_fee_pending')
+                                <p class="info-value mb-0">Booking fee belum dibayar.</p>
+                            @elseif (!in_array($order->order_status, ['created', 'booked']) && $order->driver)
                                 <p class="info-value mb-0">{{ $order->driver->name }} ({{ $order->driver->phone_number }})</p>
                                 <small class="text-muted">Driver tidak dapat diubah setelah pesanan diproses.</small>
                             @else
