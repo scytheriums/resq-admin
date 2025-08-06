@@ -236,22 +236,22 @@
             const villageCode = '{{ $driver->village_code }}';
 
             if (provinceCode) {
-                let option = new Option("{{ $driver->province->name }}", provinceCode, true, true);
+                let option = new Option("{{ $driver->province?->name }}", provinceCode, true, true);
                 $('#province_code').append(option).trigger('change');
             }
 
             if (cityCode) {
-                let option = new Option("{{ $driver->city->name }}", cityCode, true, true);
+                let option = new Option("{{ $driver->city?->name }}", cityCode, true, true);
                 $('#city_code').append(option).trigger('change');
             }
 
             if (districtCode) {
-                let option = new Option("{{ $driver->district->name }}", districtCode, true, true);
+                let option = new Option("{{ $driver->district?->name }}", districtCode, true, true);
                 $('#district_code').append(option).trigger('change');
             }
 
             if (villageCode) {
-                let option = new Option("{{ $driver->village->name }}", villageCode, true, true);
+                let option = new Option("{{ $driver->village?->name }}", villageCode, true, true);
                 $('#village_code').append(option).trigger('change');
             }
         });

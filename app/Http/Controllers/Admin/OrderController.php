@@ -181,7 +181,11 @@ class OrderController extends Controller
         //     throw $e;
         // }
         
-        return redirect()->route('admin.orders.index')->with('success', 'Pesanan berhasil diperbarui.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Pesanan berhasil diperbarui.',
+            'data' => $order
+        ]);
     }
 
     public function complete(Order $order)
