@@ -39,7 +39,7 @@
         </h4>
         <div>
             @if (in_array($order->order_status, ['confirmed','in_progress_deliver', 'in_progress_pickup', 'assigned_to_driver']) && $order->payment_status !== 'final_payment_paid')
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#completeOrderModal">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#completePaymentModal">
                     <i class='bx bx-edit me-1'></i> Sudah Bayar COD
                 </button>
             @endif
