@@ -144,7 +144,7 @@
                         </div>
                         <div class="col-sm-6 mb-3">
                             <p class="info-label mb-1">Tanggal Pesanan</p>
-                            <p class="info-value mb-0">{{ $order->order_date->translatedFormat('l, d F Y, H:i') }}</p>
+                            <p class="info-value mb-0">{{ $order->formatDate($order->order_date) }}</p>
                         </div>
                         <div class="col-sm-6 mb-3">
                             <p class="info-label mb-1">Nama Pelanggan</p>

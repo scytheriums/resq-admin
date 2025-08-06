@@ -26,7 +26,8 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $orders = Order::query()->with(['user', 'driver', 'ambulanceType', 'purpose', 'review']);
+            $orders = Order::query()->with(['user', 'driver', 'ambulanceType', 'purpose', 'review'])
+                ->orderBy('order_date', 'desc');
             return DataTables::of($orders)
                 ->addIndexColumn()
                 ->addColumn('action', function ($data) {
@@ -49,7 +50,7 @@ class OrderController extends Controller
                     return '<div class="d-flex align-items-center">
                                 <div>
                                     <h6 class="mb-0">' . $data->order_number . '</h6>
-                                    <small class="text-muted">' . $data->order_date->translatedFormat('l, d F Y, H:i') . '</small>
+                                    <small class="text-muted">' . $data->formatDate($data->order_date) . '</small>
                                 </div>
                             </div>';
                 })
