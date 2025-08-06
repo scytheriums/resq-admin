@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ChatController;
 use App\Http\Controllers\Admin\ProviderController;
 
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('notif-test', [DashboardController::class, 'send_notif'])->name('send_notif');
     Route::get('chat', [ChatController::class, 'index'])->name('chat.index');
