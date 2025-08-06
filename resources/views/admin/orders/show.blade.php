@@ -38,6 +38,11 @@
             <span class="text-muted fw-light">Admin / Pesanan /</span> Detail #{{ $order->order_number }}
         </h4>
         <div>
+            @if (in_array($order->order_status, ['confirmed','in_progress_deliver', 'in_progress_pickup', 'assigned_to_driver']) && $order->payment_status !== 'final_payment_paid')
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#completeOrderModal">
+                    <i class='bx bx-edit me-1'></i> Sudah Bayar COD
+                </button>
+            @endif
             @if (in_array($order->order_status, ['in_progress_deliver', 'in_progress_pickup', 'assigned_to_driver']))
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#completeOrderModal">
                     <i class='bx bx-edit me-1'></i> Selesaikan Pesanan
@@ -62,6 +67,24 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                     <a href="{{ route('admin.orders.complete', $order->id) }}" class="btn btn-primary">Ya, Selesaikan</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="completePaymentModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Konfirmasi Selesaikan Pembayaran</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Apakah Anda yakin ingin menyelesaikan pembayaran pada pesanan ini?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <a href="{{ route('admin.orders.cod', $order->id) }}" class="btn btn-primary">Ya, Selesaikan</a>
                 </div>
             </div>
         </div>

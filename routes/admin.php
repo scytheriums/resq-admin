@@ -27,6 +27,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Orders Management
     Route::resource('orders', OrderController::class);
     Route::get('orders/{order}/complete', [OrderController::class, 'complete'])->name('orders.complete');
+    Route::get('orders/{order}/cod', [OrderController::class, 'cod'])->name('orders.cod');
     Route::delete('orders/{order}/review/delete', [OrderController::class, 'deleteReview'])->name('orders.review.delete');
     
     

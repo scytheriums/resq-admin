@@ -205,6 +205,23 @@ class OrderController extends Controller
         return redirect()->route('admin.orders.index')->with('success', 'Pesanan berhasil diselesaikan.');
     }
 
+    public function cod(Order $order)
+    {
+        $order->order_status = 'completed';
+        $order->paymet_status = 'final_payment_paid';
+        $order->save();
+        
+        $fcm = $order->user->tokens()->first();
+        if($fcm) FCMNotificationService::send(
+            $fcm->token, 
+            $order->order_number, 
+            'Pembayaran pesanan anda telah selesai, Terima kasih atas kepercayaan Anda kepada ResQin',
+            ['orderId' => (string)$order->id]
+        );
+
+        return redirect()->back()->with('success', 'Pesanan berhasil diselesaikan.');
+    }
+
     public function deleteReview(Order $order)
     {
         $order->review()->delete();
