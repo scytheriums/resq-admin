@@ -208,7 +208,7 @@ class OrderController extends Controller
     public function cod(Order $order)
     {
         $order->order_status = 'completed';
-        $order->paymet_status = 'final_payment_paid';
+        $order->payment_status = 'final_payment_paid';
         $order->save();
         
         $fcm = $order->user->tokens()->first();
