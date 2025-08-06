@@ -314,8 +314,12 @@
                             </div>
                         @endif
                         <div class="d-flex justify-content-between mb-2">
-                            <span class="info-label">Harga Dasar</span>
+                            <span class="info-label">Ambulans ({{ $order->ambulanceType->name }})</span>
                             <span class="info-value">{{ 'Rp' . number_format($order->base_price, 0, ',', '.') }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="info-label">{{ $order->purpose->name }}</span>
+                            <span class="info-value">{{ 'Rp' . number_format($order->purpose_fee, 0, ',', '.') }}</span>
                         </div>
                         @if (!in_array($order->payment_status, ['booking_fee_paid', 'final_payment_pending', 'final_payment_paid']))
                             <div class="d-flex justify-content-between mb-2">
@@ -409,6 +413,7 @@
             $('#additionalServices').select2({ placeholder: 'Pilih layanan tambahan', allowClear: true });
 
             const basePrice = {{ $order->base_price ?? 0 }};
+            const purposeFee = {{ $order->purpose_fee }};
             const bookingFee = {{ $order->booking_fee ?? 0 }};
 
             function formatCurrency(value) {
@@ -445,7 +450,10 @@
                     breakdownHtml = '<small class="text-muted">Tidak ada layanan tambahan</small>';
                 }
 
-                const totalBill = basePrice + servicesFee;
+                // totalBill ini diasumsikan sebagai remaining bills yang harus dibayar oleh customer.
+                // jadi penghitungan harus diambil dari ambulanceFee + purposeFee + serviceFee - bookingFee
+                // const totalBill = basePrice + servicesFee;
+                const totalBill = basePrice + purposeFee + servicesFee - bookingFee;
 
                 $('#additionalServicesFee').text(formatCurrency(servicesFee));
                 $('#additionalServicesBreakdown').html(breakdownHtml);
