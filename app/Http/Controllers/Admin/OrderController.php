@@ -209,7 +209,8 @@ class OrderController extends Controller
     {
         $order->order_status = 'completed';
         $order->payment_status = 'final_payment_paid';
-        $order->save();
+        $order->driver->is_available = true;
+        $order->push();
         
         $fcm = $order->user->tokens()->first();
         if($fcm) FCMNotificationService::send(
