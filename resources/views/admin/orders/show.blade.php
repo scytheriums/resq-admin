@@ -409,11 +409,20 @@
             @endif
         });
         $(document).ready(function() {
+            // Initialize select2 dengan callback
             $('#driverSelect').select2({ placeholder: 'Pilih Driver' });
-            $('#additionalServices').select2({ placeholder: 'Pilih layanan tambahan', allowClear: true });
+            
+            // Initialize additional services select2 dengan callback
+            $('#additionalServices').select2({ 
+                placeholder: 'Pilih layanan tambahan', 
+                allowClear: true 
+            }).on('select2:select select2:unselect', function(e) {
+                // Event handler khusus untuk select2
+                setTimeout(updatePriceSummary, 150);
+            });
 
             const basePrice = {{ $order->base_price ?? 0 }};
-            const purposeFee = {{ $order->purpose_fee }};
+            const purposeFee = {{ $order->purpose_fee ?? 0 }};
             const bookingFee = {{ $order->booking_fee ?? 0 }};
 
             function formatCurrency(value) {
@@ -421,11 +430,17 @@
             }
 
             function updatePriceSummary() {
+                // Pastikan element sudah ada sebelum dijalankan
+                if (!$('#additionalServicesFee').length || !$('#totalBill').length) {
+                    setTimeout(updatePriceSummary, 100);
+                    return;
+                }
+
                 let servicesFee = 0;
                 let breakdownHtml = '';
                 @if(in_array($order->order_status, ['created', 'booked']))
                 $('#additionalServices option:selected').each(function() {
-                    const price = parseFloat($(this).data('price'));
+                    const price = parseFloat($(this).data('price')) || 0;
                     const name = $(this).text().trim();
                     servicesFee += price;
                     breakdownHtml += `
@@ -435,13 +450,16 @@
                         </div>`;
                 });
                 @else
-                    let selectedServices = {{ $order?->additionalServices?->count() > 0 ? json_encode($order->additionalServices ?? []) : '[]' }};
+                    // Untuk mode view-only, ambil data dari server response structure
+                    let selectedServices = {!! $order->additionalServices->count() > 0 ? $order->additionalServices->toJson() : '[]' !!};
                     selectedServices.forEach(service => {
-                        servicesFee += service.price;
+                        // Gunakan price dari pivot jika tersedia, fallback ke price langsung
+                        const servicePrice = service.pivot ? parseFloat(service.pivot.price) : parseFloat(service.price) || 0;
+                        servicesFee += servicePrice;
                         breakdownHtml += `
                             <div class="d-flex justify-content-between mb-1">
                                 <small class="text-muted">• ${service.name}</small>
-                                <small class="text-muted">${formatCurrency(service.price)}</small>
+                                <small class="text-muted">${formatCurrency(servicePrice)}</small>
                             </div>`;
                     });
                 @endif
@@ -450,17 +468,25 @@
                     breakdownHtml = '<small class="text-muted">Tidak ada layanan tambahan</small>';
                 }
 
-                // totalBill ini diasumsikan sebagai remaining bills yang harus dibayar oleh customer.
-                // jadi penghitungan harus diambil dari ambulanceFee + purposeFee + serviceFee - bookingFee
-                // const totalBill = basePrice + servicesFee;
-                const totalBill = basePrice + purposeFee + servicesFee - bookingFee;
+                let totalBill;
+                @if($order->payment_status === 'booking_fee_pending')
+                    // Jika booking fee belum dibayar, total termasuk booking fee
+                    totalBill = basePrice + purposeFee + servicesFee + bookingFee;
+                @else
+                    // Jika booking fee sudah dibayar, kurangi dari total
+                    totalBill = basePrice + purposeFee + servicesFee - bookingFee;
+                @endif
 
                 $('#additionalServicesFee').text(formatCurrency(servicesFee));
                 $('#additionalServicesBreakdown').html(breakdownHtml);
                 $('#totalBill').text(formatCurrency(totalBill));
             }
 
-            $('#additionalServices').on('change', updatePriceSummary);
+            // Event handler untuk perubahan additional services
+            $('#additionalServices').on('change', function() {
+                // Delay sedikit untuk memastikan DOM sudah terupdate
+                setTimeout(updatePriceSummary, 100);
+            });
 
             // Close intro.js if it's open when form is submitted
             if (window.introJs) {
@@ -468,34 +494,95 @@
             }
             
             $('#updateOrderForm').on('submit', function(e) {
-                // e.preventDefault();
+                e.preventDefault(); // Prevent default form submission
                 const form = $(this);
                 const submitBtn = $('#submitBtn');
                 const originalBtnText = submitBtn.html();
 
                 submitBtn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Menyimpan...').prop('disabled', true);
 
-                // $.ajax({
-                //     url: form.attr('action'),
-                //     method: 'POST', // Form method is POST, with _method hidden input for PUT
-                //     data: form.serialize(),
-                //     success: function(response) {
-                //         toastr.success('Perubahan berhasil disimpan!');
-                //         $('#additionalServicesFee').text(formatCurrency(response.data.additional_services_fee));
-                //         $('#totalBill').text(formatCurrency(response.data.total_bill));
-                //     },
-                //     error: function(xhr) {
-                //         toastr.error('Gagal menyimpan perubahan. Silakan coba lagi.');
-                //         console.error(xhr.responseText);
-                //     },
-                //     complete: function() {
-                //         submitBtn.html(originalBtnText).prop('disabled', false);
-                //     }
-                // });
+                $.ajax({
+                    url: form.attr('action'),
+                    method: 'POST', // Form method is POST, with _method hidden input for PUT
+                    data: form.serialize(),
+                    success: function(response) {
+                        if (response.success && response.data) {
+                            // Update UI dengan data dari response
+                            const data = response.data;
+                            
+                            // Update additional services fee
+                            const additionalServicesFee = parseFloat(data.additional_services_fee) || 0;
+                            $('#additionalServicesFee').text(formatCurrency(additionalServicesFee));
+                            
+                            // Update total bill
+                            const totalBill = parseFloat(data.total_bill) || 0;
+                            $('#totalBill').text(formatCurrency(totalBill));
+                            
+                            // Update additional services breakdown
+                            let breakdownHtml = '';
+                            if (data.additional_services && data.additional_services.length > 0) {
+                                data.additional_services.forEach(service => {
+                                    const servicePrice = service.pivot ? parseFloat(service.pivot.price) : parseFloat(service.price) || 0;
+                                    breakdownHtml += `
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <small class="text-muted">• ${service.name}</small>
+                                            <small class="text-muted">${formatCurrency(servicePrice)}</small>
+                                        </div>`;
+                                });
+                            } else {
+                                breakdownHtml = '<small class="text-muted">Tidak ada layanan tambahan</small>';
+                            }
+                            $('#additionalServicesBreakdown').html(breakdownHtml);
+                            
+                            // Show success message
+                            if (typeof toastr !== 'undefined') {
+                                toastr.success('Perubahan berhasil disimpan!');
+                            } else {
+                                alert('Perubahan berhasil disimpan!');
+                            }
+                            
+                            // Redirect to orders index after success
+                            setTimeout(() => {
+                                window.location.href = '{{ route("admin.orders.index") }}';
+                            }, 1500);
+                        } else {
+                            throw new Error('Invalid response format');
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('Error response:', xhr.responseText);
+                        let errorMessage = 'Gagal menyimpan perubahan. Silakan coba lagi.';
+                        
+                        try {
+                            const errorResponse = JSON.parse(xhr.responseText);
+                            if (errorResponse.message) {
+                                errorMessage = errorResponse.message;
+                            } else if (errorResponse.errors) {
+                                // Handle validation errors
+                                const errors = Object.values(errorResponse.errors).flat();
+                                errorMessage = errors.join(', ');
+                            }
+                        } catch (e) {
+                            // Use default message if parsing fails
+                        }
+                        
+                        if (typeof toastr !== 'undefined') {
+                            toastr.error(errorMessage);
+                        } else {
+                            alert(errorMessage);
+                        }
+                    },
+                    complete: function() {
+                        submitBtn.html(originalBtnText).prop('disabled', false);
+                    }
+                });
             });
 
             // --- Initial Calculation on Page Load ---
-            updatePriceSummary();
+            // Delay execution untuk memastikan semua element sudah ready
+            setTimeout(function() {
+                updatePriceSummary();
+            }, 300);
         });
     </script>
     <script>

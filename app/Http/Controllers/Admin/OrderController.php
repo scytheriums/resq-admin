@@ -95,6 +95,11 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         $order->load(['user', 'driver', 'ambulanceType', 'purpose', 'additionalServices', 'review']);
+        // return response()->json([
+        //     'success' => true,
+        //     'data' => $order,
+        // ], 200, [], JSON_PRETTY_PRINT);
+        // die;
         $title = 'Detail Pesanan #' . $order->order_number;
         
         // Get available drivers and additional services
