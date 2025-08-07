@@ -167,7 +167,7 @@
                         </div>
                         <div class="col-sm-6 mb-3">
                             <p class="info-label mb-1">Tanggal Pesanan</p>
-                            <p class="info-value mb-0">{{ $order->formatDate($order->order_date) }}</p>
+                            <p class="info-value mb-0">{{ $timeFormat->formatDate($order->order_date) }}</p>
                         </div>
                         <div class="col-sm-6 mb-3">
                             <p class="info-label mb-1">Nama Pelanggan</p>
@@ -199,8 +199,9 @@
 
             <!-- Location Details -->
             <div class="card mb-4">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="card-title">B. Informasi Lokasi</h4>
+                    <h4 class="text-muted">Jarak = {{ $order->distance ?? '0' }} Km</h4>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -383,6 +384,71 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Payment History Card -->
+                @if($order->payments && count($order->payments) > 0)
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">E. Riwayat Pembayaran</h5>
+                    </div>
+                    <div class="card-body">
+                        @foreach($order->payments as $payment)
+                            <div class="payment-item mb-3 p-3 border rounded">
+                                <div class="row">
+                                    <div class="col-sm-6 mb-2">
+                                        <p class="info-label mb-1">ID Transaksi</p>
+                                        <p class="info-value mb-0 small">{{ $payment->transaction_id ?? '-' }}</p>
+                                    </div>
+                                    <div class="col-sm-6 mb-2">
+                                        <p class="info-label mb-1">Jenis Pembayaran</p>
+                                        <p class="info-value mb-0">{{ ucwords(str_replace('_', ' ', $payment->transaction_type ?? '-')) }}</p>
+                                    </div>
+                                    <div class="col-sm-6 mb-2">
+                                        <p class="info-label mb-1">Jumlah</p>
+                                        <p class="info-value mb-0">{{ 'Rp' . number_format($payment->amount, 0, ',', '.') }}</p>
+                                    </div>
+                                    <div class="col-sm-6 mb-2">
+                                        <p class="info-label mb-1">Metode Pembayaran</p>
+                                        <p class="info-value mb-0">{{ $payment->payment_method ?? '-' }}</p>
+                                    </div>
+                                    <div class="col-sm-6 mb-2">
+                                        <p class="info-label mb-1">Status</p>
+                                        <p class="info-value mb-0">
+                                            @if($payment->status === 'PAID')
+                                                <x-status-badge class="success" label="Lunas" />
+                                            @elseif($payment->status === 'PENDING')
+                                                <x-status-badge class="warning" label="Menunggu" />
+                                            @elseif($payment->status === 'EXPIRED')
+                                                <x-status-badge class="danger" label="Kadaluarsa" />
+                                            @elseif($payment->status === 'FAILED')
+                                                <x-status-badge class="danger" label="Gagal" />
+                                            @else
+                                                <x-status-badge class="secondary" label="{{ $payment->status }}" />
+                                            @endif
+                                        </p>
+                                    </div>
+                                    <div class="col-sm-6 mb-2">
+                                        <p class="info-label mb-1">Tanggal Dibuat</p>
+                                        <p class="info-value mb-0">{{ $timeFormat->formatDate($payment->created_at) }}</p>
+                                    </div>
+                                    @if($payment->va_number && $payment->va_bank_code)
+                                    <div class="col-sm-6 mb-2">
+                                        <p class="info-label mb-1">Nomor VA</p>
+                                        <p class="info-value mb-0">{{ $payment->va_number }} ({{ $payment->va_bank_code }})</p>
+                                    </div>
+                                    @endif
+                                    @if($payment->expires_at)
+                                    <div class="col-sm-6 mb-2">
+                                        <p class="info-label mb-1">Kadaluarsa</p>
+                                        <p class="info-value mb-0">{{ $timeFormat->formatDate($payment->expires_at) }}</p>
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
 
                 @if (in_array($order->order_status, ['created', 'booked']))
                     <button type="submit" 

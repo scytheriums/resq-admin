@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use App\Services\FCMNotificationService;
+use App\Services\TimeFormatService;
 
 class OrderController extends Controller
 {
@@ -23,7 +24,7 @@ class OrderController extends Controller
         $this->middleware(['permission:delete-order'], ['only' => ['destroy']]);
     }
 
-    public function index(Request $request)
+    public function index(Request $request, TimeFormatService $timeFormat)
     {
         if ($request->ajax()) {
             $orders = Order::query()->with(['user', 'driver', 'ambulanceType', 'purpose', 'review'])
@@ -46,11 +47,11 @@ class OrderController extends Controller
                                 ' . $delete . '
                             </div>';
                 })
-                ->editColumn('order_number', function ($data) {
+                ->editColumn('order_number', function ($data) use ($timeFormat) {
                     return '<div class="d-flex align-items-center">
                                 <div>
                                     <h6 class="mb-0">' . $data->order_number . '</h6>
-                                    <small class="text-muted">' . $data->formatDate($data->order_date) . '</small>
+                                    <small class="text-muted">' . $timeFormat->formatDate($data->order_date) . '</small>
                                 </div>
                             </div>';
                 })
@@ -92,9 +93,9 @@ class OrderController extends Controller
         return view('admin.orders.index', compact('title'));
     }
 
-    public function show(Order $order)
+    public function show(Order $order, TimeFormatService $timeFormat)
     {
-        $order->load(['user', 'driver', 'ambulanceType', 'purpose', 'additionalServices', 'review']);
+        $order->load(['user', 'driver', 'payments', 'ambulanceType', 'purpose', 'additionalServices', 'review']);
         // return response()->json([
         //     'success' => true,
         //     'data' => $order,
@@ -106,7 +107,7 @@ class OrderController extends Controller
         $drivers = Driver::isAvailable()->get();
         $additionalServices = AdditionalService::all();
         
-        return view('admin.orders.show', compact('order', 'title', 'drivers', 'additionalServices'));
+        return view('admin.orders.show', compact('order', 'title', 'drivers', 'additionalServices', 'timeFormat'));
     }
     
     public function update(Request $request, Order $order)
