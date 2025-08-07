@@ -296,7 +296,11 @@
                         <!-- Additional Services -->
                         <div>
                             <label class="form-label">Layanan Tambahan</label>
-                            @if(in_array($order->order_status, ['created', 'booked']))
+                            @if($order->order_status === 'created')
+                                <div data-intro="<h5>Layanan Tambahan</h5><p>Pilih layanan tambahan yang diperlukan. Harga akan otomatis diperbarui di rincian pembayaran.</p>" data-step="3">
+                                    <p class="text-muted">Menunggu Booking Fee Lunas</p>
+                                </div>
+                            @elseif($order->order_status === 'booked')
                                 <div data-intro="<h5>Layanan Tambahan</h5><p>Pilih layanan tambahan yang diperlukan. Harga akan otomatis diperbarui di rincian pembayaran.</p>" data-step="3">
                                     <select class="select2 form-select" id="additionalServices" name="additional_services[]" multiple>
                                         @foreach($additionalServices as $service)
