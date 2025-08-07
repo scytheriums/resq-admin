@@ -333,23 +333,33 @@
                     </div>
                     <div class="card-body">
                         @if (in_array($order->payment_status, ['booking_fee_paid', 'final_payment_pending', 'final_payment_paid']))
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="info-label"><s>Biaya Booking</s></span>
-                                <span class="info-value"><s>{{ 'Rp' . number_format($order->booking_fee, 0, ',', '.') }}</s></span>
+                            <div class="d-flex justify-content-between mb-4">
+                                <span class="info-label">
+                                    <x-status-badge class="success" label="Booking Fee Lunas" />
+                                </span>
+                            </div>
+                        @else
+                            <div class="d-flex justify-content-between mb-4">
+                                <span class="info-label">
+                                    <x-status-badge class="danger" label="Booking Fee Belum Lunas" />
+                                </span>
                             </div>
                         @endif
+
                         <div class="d-flex justify-content-between mb-2">
                             <span class="info-label">Ambulans ({{ $order->ambulanceType->name }})</span>
                             <span class="info-value">{{ 'Rp' . number_format($order->base_price, 0, ',', '.') }}</span>
                         </div>
+                        
                         <div class="d-flex justify-content-between mb-2">
                             <span class="info-label">{{ $order->purpose->name }}</span>
                             <span class="info-value">{{ 'Rp' . number_format($order->purpose_fee, 0, ',', '.') }}</span>
                         </div>
-                        @if (!in_array($order->payment_status, ['booking_fee_paid', 'final_payment_pending', 'final_payment_paid']))
+                        
+                        @if (in_array($order->payment_status, ['booking_fee_paid', 'final_payment_pending', 'final_payment_paid']))
                             <div class="d-flex justify-content-between mb-2">
-                                <span class="info-label">Biaya Booking</span>
-                                <span class="info-value">{{ 'Rp' . number_format($order->booking_fee, 0, ',', '.') }}</span>
+                                <span class="info-label"><s>Booking Fee</s></span>
+                                <span class="info-value"><s>{{ 'Rp' . number_format($order->booking_fee, 0, ',', '.') }}</s></span>
                             </div>
                         @endif
                         
@@ -495,8 +505,8 @@
 
                 let totalBill;
                 @if($order->payment_status === 'booking_fee_pending')
-                    // Jika booking fee belum dibayar, total termasuk booking fee
-                    totalBill = basePrice + purposeFee + servicesFee + bookingFee;
+                    // Jika booking fee belum dibayar
+                    totalBill = basePrice + purposeFee + servicesFee;
                 @else
                     // Jika booking fee sudah dibayar, kurangi dari total
                     totalBill = basePrice + purposeFee + servicesFee - bookingFee;
