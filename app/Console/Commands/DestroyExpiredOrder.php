@@ -58,7 +58,7 @@ class DestroyExpiredOrder extends Command
                 $query->select(DB::raw(1))
                     ->from('payments')
                     ->whereRaw('payments.order_id = orders.id')
-                    // ->whereRaw("payment_method = 'XENDIT_VA'")
+                    ->whereRaw("payment_method = 'XENDIT_VA'")
                     ->whereRaw("status = 'PENDING'")
                     ->where('created_at', '<', now()->subMinutes(15));
             })
