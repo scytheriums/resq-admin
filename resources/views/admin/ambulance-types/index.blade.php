@@ -80,7 +80,7 @@
                         orderable: false,
                         searchable: false
                     },
-                    { data: 'name', name: 'name' },
+                    { data: 'vehicle_name', name: 'vehicle_name' },
                     { data: 'tarif_dalam_kota', class: 'text-end' },
                     { data: 'tarif_km_luar_kota', class: 'text-end' },
                     { data: 'tarif_km_luar_provinsi', class: 'text-end' },
@@ -92,7 +92,8 @@
             $('.btn-delete').on('click', function(e) {
                 e.preventDefault();
                 let url = $(this).data('url');
-                let name = $(this).data('name');
+                let name = $(this).data('vehicle_name');
+                console.log($(this).data('vehicle_name'));
                 $('.delete-type').html('Tipe Ambulance');
                 $('.delete-hint').html(name);
 

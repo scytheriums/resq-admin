@@ -20,17 +20,17 @@
                 @method('PUT')
                 <div class="row">
                     <div class="col-md-12 mb-3">
-                        <label for="vehicle_id" class="form-label">Kendaraan Ambulance</label>
-                        <select class="form-select select2 @error('vehicle_id') is-invalid @enderror" 
-                            id="vehicle_id" name="vehicle_id" required>
+                        <label for="ambulance_vehicles_id" class="form-label">Kendaraan Ambulance</label>
+                        <select class="form-select select2 @error('ambulance_vehicles_id') is-invalid @enderror" 
+                            id="ambulance_vehicles_id" name="ambulance_vehicles_id" required>
                             <option value="">Pilih Kendaraan Ambulance</option>
                             @foreach($ambulanceVehicles as $vehicle)
-                                <option value="{{ $vehicle->id }}" {{ old('vehicle_id', $ambulanceType->vehicle_id) == $vehicle->id ? 'selected' : '' }}>
+                                <option value="{{ $vehicle->id }}" {{ old('ambulance_vehicles_id', $ambulanceType->ambulance_vehicles_id) == $vehicle->id ? 'selected' : '' }}>
                                     {{ $vehicle->vehicle_name }}
                                 </option>
                             @endforeach
                         </select>
-                        @error('vehicle_id')
+                        @error('ambulance_vehicles_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>

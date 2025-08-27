@@ -22,10 +22,13 @@ class AmbulanceTypeController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $ambulanceTypes = AmbulanceType::query();
+            $ambulanceTypes = AmbulanceType::with(['ambulanceVehicle']);
             $purposes = Purpose::pluck('name','id');
             return DataTables::of($ambulanceTypes)
                 ->addIndexColumn()
+                ->addColumn('vehicle_name', function ($data){
+                    return $data->ambulanceVehicle->vehicle_name;
+                })
                 ->addColumn('action', function ($data) {
                     $edit = '';
                     $delete = '';
@@ -67,7 +70,7 @@ class AmbulanceTypeController extends Controller
                 ->editColumn('tarif_km_luar_provinsi', function ($data) {
                     return 'Rp ' . number_format($data->tarif_km_luar_provinsi, 2);
                 })
-                ->rawColumns(['action', 'free_tarif_for_purpose', 'tarif_dalam_kota'])
+                ->rawColumns(['action', 'free_tarif_for_purpose', 'tarif_dalam_kota', 'vehicle_name'])
                 ->make(true);
         }
         $title = 'Ambulance Types';
@@ -116,7 +119,7 @@ class AmbulanceTypeController extends Controller
     public function update(Request $request, AmbulanceType $ambulanceType)
     {
         $validated = $request->validate([
-            'vehicle_id' => 'required|exists:ambulance_vehicles,id',
+            'ambulance_vehicles_id' => 'required|exists:ambulance_vehicles,id',
             'tarif_dalam_kota' => 'required|numeric|min:0',
             'tarif_km_luar_kota' => 'required|numeric|min:0',
             'tarif_km_luar_provinsi' => 'required|numeric|min:0',
@@ -125,7 +128,7 @@ class AmbulanceTypeController extends Controller
         ]);
 
         $ambulanceType->update($validated);
-        $ambulanceType->name = $ambulanceType->ambulanceVehicle?->vehicle_name ?? '';
+        // $ambulanceType->name = $ambulanceType->ambulanceVehicle?->vehicle_name ?? '';
         $ambulanceType->save();
         return redirect()->route('admin.ambulance-types.index')
             ->with('success', 'Ambulance type updated successfully');

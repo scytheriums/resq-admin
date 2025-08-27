@@ -13,7 +13,8 @@ class AmbulanceType extends Model
         'tarif_dalam_kota',
         'tarif_km_luar_kota',
         'tarif_km_luar_provinsi',
-        'free_tarif_for_purpose'
+        'free_tarif_for_purpose',
+        'ambulance_vehicles_id',
     ];
 
     protected $casts = [
@@ -30,6 +31,6 @@ class AmbulanceType extends Model
 
     public function ambulanceVehicle()
     {
-        return $this->belongsTo(AmbulanceVehicle::class, 'vehicle_id');
+        return $this->belongsTo(AmbulanceVehicle::class, 'ambulance_vehicles_id', 'id');
     }
 }
