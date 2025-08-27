@@ -167,7 +167,7 @@
                         </div>
                         <div class="col-sm-6 mb-3">
                             <p class="info-label mb-1">Tanggal Pesanan</p>
-                            <p class="info-value mb-0">{{ $order->formatDate($order->order_date) }}</p>
+                            <p class="info-value mb-0">{{ $timeFormat->formatDate($order->order_date) }}</p>
                         </div>
                         <div class="col-sm-6 mb-3">
                             <p class="info-label mb-1">Nama Pelanggan</p>
@@ -199,8 +199,9 @@
 
             <!-- Location Details -->
             <div class="card mb-4">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h4 class="card-title">B. Informasi Lokasi</h4>
+                    <h4 class="text-muted">Jarak = {{ $order->distance ?? '0' }} Km</h4>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -296,7 +297,11 @@
                         <!-- Additional Services -->
                         <div>
                             <label class="form-label">Layanan Tambahan</label>
-                            @if(in_array($order->order_status, ['created', 'booked']))
+                            @if($order->order_status === 'created')
+                                <div data-intro="<h5>Layanan Tambahan</h5><p>Pilih layanan tambahan yang diperlukan. Harga akan otomatis diperbarui di rincian pembayaran.</p>" data-step="3">
+                                    <p class="text-muted">Menunggu Booking Fee Lunas</p>
+                                </div>
+                            @elseif($order->order_status === 'booked')
                                 <div data-intro="<h5>Layanan Tambahan</h5><p>Pilih layanan tambahan yang diperlukan. Harga akan otomatis diperbarui di rincian pembayaran.</p>" data-step="3">
                                     <select class="select2 form-select" id="additionalServices" name="additional_services[]" multiple>
                                         @foreach($additionalServices as $service)
@@ -333,23 +338,33 @@
                     </div>
                     <div class="card-body">
                         @if (in_array($order->payment_status, ['booking_fee_paid', 'final_payment_pending', 'final_payment_paid']))
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="info-label"><s>Biaya Booking</s></span>
-                                <span class="info-value"><s>{{ 'Rp' . number_format($order->booking_fee, 0, ',', '.') }}</s></span>
+                            <div class="d-flex justify-content-between mb-4">
+                                <span class="info-label">
+                                    <x-status-badge class="success" label="Booking Fee Lunas" />
+                                </span>
+                            </div>
+                        @else
+                            <div class="d-flex justify-content-between mb-4">
+                                <span class="info-label">
+                                    <x-status-badge class="danger" label="Booking Fee Belum Lunas" />
+                                </span>
                             </div>
                         @endif
+
                         <div class="d-flex justify-content-between mb-2">
                             <span class="info-label">Ambulans ({{ $order->ambulanceType->name }})</span>
                             <span class="info-value">{{ 'Rp' . number_format($order->base_price, 0, ',', '.') }}</span>
                         </div>
+                        
                         <div class="d-flex justify-content-between mb-2">
                             <span class="info-label">{{ $order->purpose->name }}</span>
                             <span class="info-value">{{ 'Rp' . number_format($order->purpose_fee, 0, ',', '.') }}</span>
                         </div>
-                        @if (!in_array($order->payment_status, ['booking_fee_paid', 'final_payment_pending', 'final_payment_paid']))
+                        
+                        @if (in_array($order->payment_status, ['booking_fee_paid', 'final_payment_pending', 'final_payment_paid']))
                             <div class="d-flex justify-content-between mb-2">
-                                <span class="info-label">Biaya Booking</span>
-                                <span class="info-value">{{ 'Rp' . number_format($order->booking_fee, 0, ',', '.') }}</span>
+                                <span class="info-label"><s>Booking Fee</s></span>
+                                <span class="info-value"><s>{{ 'Rp' . number_format($order->booking_fee, 0, ',', '.') }}</s></span>
                             </div>
                         @endif
                         
@@ -369,6 +384,71 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Payment History Card -->
+                @if($order->payments && count($order->payments) > 0)
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">E. Riwayat Pembayaran</h5>
+                    </div>
+                    <div class="card-body">
+                        @foreach($order->payments as $payment)
+                            <div class="payment-item mb-3 p-3 border rounded">
+                                <div class="row">
+                                    <div class="col-sm-6 mb-2">
+                                        <p class="info-label mb-1">ID Transaksi</p>
+                                        <p class="info-value mb-0 small">{{ $payment->transaction_id ?? '-' }}</p>
+                                    </div>
+                                    <div class="col-sm-6 mb-2">
+                                        <p class="info-label mb-1">Jenis Pembayaran</p>
+                                        <p class="info-value mb-0">{{ ucwords(str_replace('_', ' ', $payment->transaction_type ?? '-')) }}</p>
+                                    </div>
+                                    <div class="col-sm-6 mb-2">
+                                        <p class="info-label mb-1">Jumlah</p>
+                                        <p class="info-value mb-0">{{ 'Rp' . number_format($payment->amount, 0, ',', '.') }}</p>
+                                    </div>
+                                    <div class="col-sm-6 mb-2">
+                                        <p class="info-label mb-1">Metode Pembayaran</p>
+                                        <p class="info-value mb-0">{{ $payment->payment_method ?? '-' }}</p>
+                                    </div>
+                                    <div class="col-sm-6 mb-2">
+                                        <p class="info-label mb-1">Status</p>
+                                        <p class="info-value mb-0">
+                                            @if($payment->status === 'PAID')
+                                                <x-status-badge class="success" label="Lunas" />
+                                            @elseif($payment->status === 'PENDING')
+                                                <x-status-badge class="warning" label="Menunggu" />
+                                            @elseif($payment->status === 'EXPIRED')
+                                                <x-status-badge class="danger" label="Kadaluarsa" />
+                                            @elseif($payment->status === 'FAILED')
+                                                <x-status-badge class="danger" label="Gagal" />
+                                            @else
+                                                <x-status-badge class="secondary" label="{{ $payment->status }}" />
+                                            @endif
+                                        </p>
+                                    </div>
+                                    <div class="col-sm-6 mb-2">
+                                        <p class="info-label mb-1">Tanggal Dibuat</p>
+                                        <p class="info-value mb-0">{{ $timeFormat->formatDate($payment->created_at) }}</p>
+                                    </div>
+                                    @if($payment->va_number && $payment->va_bank_code)
+                                    <div class="col-sm-6 mb-2">
+                                        <p class="info-label mb-1">Nomor VA</p>
+                                        <p class="info-value mb-0">{{ $payment->va_number }} ({{ $payment->va_bank_code }})</p>
+                                    </div>
+                                    @endif
+                                    @if($payment->expires_at)
+                                    <div class="col-sm-6 mb-2">
+                                        <p class="info-label mb-1">Kadaluarsa</p>
+                                        <p class="info-value mb-0">{{ $timeFormat->formatDate($payment->expires_at) }}</p>
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
 
                 @if (in_array($order->order_status, ['created', 'booked']))
                     <button type="submit" 
@@ -495,8 +575,8 @@
 
                 let totalBill;
                 @if($order->payment_status === 'booking_fee_pending')
-                    // Jika booking fee belum dibayar, total termasuk booking fee
-                    totalBill = basePrice + purposeFee + servicesFee + bookingFee;
+                    // Jika booking fee belum dibayar
+                    totalBill = basePrice + purposeFee + servicesFee;
                 @else
                     // Jika booking fee sudah dibayar, kurangi dari total
                     totalBill = basePrice + purposeFee + servicesFee - bookingFee;
