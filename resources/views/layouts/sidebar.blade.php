@@ -71,6 +71,15 @@
         </li>
       @endif
 
+      @if (auth()->user()->can('read-providers'))
+        <li class="menu-item {{ request()->is('admin/affiliators*') ? 'active' : '' }}">
+          <a href="{{ route('admin.affiliators.index') }}" class="menu-link">
+            <i class="menu-icon tf-icons ti ti-user"></i>
+            <div>Affiliator</div>
+          </a>
+        </li>
+      @endif
+
       @if (auth()->user()->can('read-driver'))
         <li class="menu-item {{ request()->is('admin/drivers*') ? 'active' : '' }}">
           <a href="{{ route('admin.drivers.index') }}" class="menu-link">

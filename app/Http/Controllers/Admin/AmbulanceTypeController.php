@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\AmbulanceType;
-use App\Models\Driver;
+use App\Models\Provider;
 use App\Models\Purpose;
 use App\Models\AmbulanceVehicle;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class AmbulanceTypeController extends Controller
@@ -22,12 +23,24 @@ class AmbulanceTypeController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $ambulanceTypes = AmbulanceType::with(['ambulanceVehicle']);
+            $ambulanceTypes = AmbulanceType::with(['ambulanceVehicle'])
+                ->withCount('tarifs')
+                ->withMin('tarifs', 'tarif')
+                ->withMax('tarifs', 'tarif');
+                
             $purposes = Purpose::pluck('name','id');
+            
             return DataTables::of($ambulanceTypes)
                 ->addIndexColumn()
                 ->addColumn('vehicle_name', function ($data){
-                    return $data->ambulanceVehicle->vehicle_name;
+                    return $data->ambulanceVehicle->vehicle_name ?? '-';
+                })
+                ->addColumn('tarif_range', function ($data) {
+                    if ($data->tarifs_count > 0) {
+                        return 'Rp ' . number_format($data->tarifs_min_tarif, 0, ',', '.') . ' - Rp ' . 
+                               number_format($data->tarifs_max_tarif, 0, ',', '.');
+                    }
+                    return '-';
                 })
                 ->addColumn('action', function ($data) {
                     $edit = '';
@@ -45,11 +58,6 @@ class AmbulanceTypeController extends Controller
                                 ' . $delete . '
                             </div>';
                 })
-                ->editColumn('tarif_dalam_kota', function ($data) use ($purposes) {
-                    $html = '<div class="d-block">Rp ' . number_format($data->tarif_dalam_kota, 2). '</div>';
-                    
-                    return $html;
-                })
                 ->editColumn('free_tarif_for_purpose', function ($data) use ($purposes) {
                     $html = '';
                     if($data->free_tarif_for_purpose && count($data->free_tarif_for_purpose)) {
@@ -64,13 +72,7 @@ class AmbulanceTypeController extends Controller
                     
                     return $html;
                 })
-                ->editColumn('tarif_km_luar_kota', function ($data) {
-                    return 'Rp ' . number_format($data->tarif_km_luar_kota, 2);
-                })
-                ->editColumn('tarif_km_luar_provinsi', function ($data) {
-                    return 'Rp ' . number_format($data->tarif_km_luar_provinsi, 2);
-                })
-                ->rawColumns(['action', 'free_tarif_for_purpose', 'tarif_dalam_kota', 'vehicle_name'])
+                ->rawColumns(['action', 'free_tarif_for_purpose', 'tarif_range', 'vehicle_name'])
                 ->make(true);
         }
         $title = 'Ambulance Types';
@@ -93,20 +95,45 @@ class AmbulanceTypeController extends Controller
 
     public function store(Request $request)
     {
-        // DB::statement("SELECT setval(pg_get_serial_sequence('ambulance_types', 'id'), coalesce(max(id),0) + 1, false) FROM ambulance_types;");
         $validated = $request->validate([
             'vehicle_id' => 'required|exists:ambulance_vehicles,id',
-            'tarif_dalam_kota' => 'required|numeric|min:0',
-            'tarif_km_luar_kota' => 'required|numeric|min:0',
-            'tarif_km_luar_provinsi' => 'required|numeric|min:0',
+            'tarifs' => 'required|array|min:1',
+            'tarifs.*.min_distance' => 'required|numeric|min:0',
+            'tarifs.*.max_distance' => 'required|numeric|min:0|gte:tarifs.*.min_distance',
+            'tarifs.*.tarif' => 'required|numeric|min:0',
             'free_tarif_for_purpose' => 'nullable|array',
             'free_tarif_for_purpose.*' => 'exists:purposes,id'
         ]);
 
-        $ambulanceType = AmbulanceType::create($validated);
-        $ambulanceType->name = $ambulanceType->ambulanceVehicle->vehicle_name;
-        $ambulanceType->save();
-        return redirect()->route('admin.ambulance-types.index')->with('success', 'Ambulance Type created successfully');
+        // Start database transaction
+        return DB::transaction(function () use ($validated) {
+            // Create the ambulance type
+            $ambulanceType = new AmbulanceType([
+                'vehicle_id' => $validated['vehicle_id'],
+                'name' => AmbulanceVehicle::find($validated['vehicle_id'])->vehicle_name,
+                'free_tarif_for_purpose' => $validated['free_tarif_for_purpose'] ?? null,
+                'tarif_dalam_kota' => 0,
+                'tarif_km_luar_kota' => 0,
+                'tarif_km_luar_provinsi' => 0,
+                'provider_id' => Provider::first()->id
+            ]);
+            
+            $ambulanceType->save();
+
+            // Create tarifs
+            foreach ($validated['tarifs'] as $tarifData) {
+                $ambulanceType->tarifs()->create([
+                    'min_distance' => $tarifData['min_distance'],
+                    'max_distance' => $tarifData['max_distance'],
+                    'provider_id' => $ambulanceType->provider_id,
+                    'tarif' => $tarifData['tarif']
+                ]);
+            }
+
+            return redirect()
+                ->route('admin.ambulance-types.index')
+                ->with('success', 'Tipe Ambulance berhasil ditambahkan');
+        });
     }
 
     public function edit(AmbulanceType $ambulanceType)
@@ -119,19 +146,41 @@ class AmbulanceTypeController extends Controller
     public function update(Request $request, AmbulanceType $ambulanceType)
     {
         $validated = $request->validate([
-            'ambulance_vehicles_id' => 'required|exists:ambulance_vehicles,id',
-            'tarif_dalam_kota' => 'required|numeric|min:0',
-            'tarif_km_luar_kota' => 'required|numeric|min:0',
-            'tarif_km_luar_provinsi' => 'required|numeric|min:0',
+            'vehicle_id' => 'required|exists:ambulance_vehicles,id',
+            'tarifs' => 'required|array|min:1',
+            'tarifs.*.min_distance' => 'required|numeric|min:0',
+            'tarifs.*.max_distance' => 'required|numeric|min:0|gte:tarifs.*.min_distance',
+            'tarifs.*.tarif' => 'required|numeric|min:0',
             'free_tarif_for_purpose' => 'nullable|array',
-            'free_tarif_for_purpose.*' => 'exists:purposes,id',
+            'free_tarif_for_purpose.*' => 'exists:purposes,id'
         ]);
 
-        $ambulanceType->update($validated);
-        // $ambulanceType->name = $ambulanceType->ambulanceVehicle?->vehicle_name ?? '';
-        $ambulanceType->save();
-        return redirect()->route('admin.ambulance-types.index')
-            ->with('success', 'Ambulance type updated successfully');
+        // Start database transaction
+        return DB::transaction(function () use ($validated, $ambulanceType) {
+            // Update the ambulance type
+            $ambulanceType->update([
+                'vehicle_id' => $validated['vehicle_id'],
+                'name' => AmbulanceVehicle::find($validated['vehicle_id'])->vehicle_name,
+                'free_tarif_for_purpose' => $validated['free_tarif_for_purpose'] ?? null
+            ]);
+
+            // Delete existing tarifs
+            $ambulanceType->tarifs()->delete();
+
+            // Create new tarifs
+            foreach ($validated['tarifs'] as $tarifData) {
+                $ambulanceType->tarifs()->create([
+                    'min_distance' => $tarifData['min_distance'],
+                    'max_distance' => $tarifData['max_distance'],
+                    'provider_id' => $ambulanceType->provider_id,
+                    'tarif' => $tarifData['tarif']
+                ]);
+            }
+
+            return redirect()
+                ->route('admin.ambulance-types.index')
+                ->with('success', 'Tipe Ambulance berhasil diperbarui');
+        });
     }
 
     public function destroy(AmbulanceType $ambulanceType)

@@ -34,6 +34,12 @@ class RolePermissionSeeder extends Seeder
             ['name' => 'Update Providers', 'slug' => 'update-providers'],
             ['name' => 'Delete Providers', 'slug' => 'delete-providers'],
 
+             // User Permissions
+             ['name' => 'Create Affiliators', 'slug' => 'create-affiliators'],
+             ['name' => 'Read Affiliators', 'slug' => 'read-affiliators'],
+             ['name' => 'Update Affiliators', 'slug' => 'update-affiliators'],
+             ['name' => 'Delete Affiliators', 'slug' => 'delete-affiliators'],
+
             ['name' => 'Create Reviews', 'slug' => 'create-reviews'],
             ['name' => 'Read Reviews', 'slug' => 'read-reviews'],
             ['name' => 'Update Reviews', 'slug' => 'update-reviews'],

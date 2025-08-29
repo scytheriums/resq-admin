@@ -10,6 +10,7 @@ class AmbulanceType extends Model
     use LogsActivity;
     protected $fillable = [
         'name',
+        'provider_id',
         'tarif_dalam_kota',
         'tarif_km_luar_kota',
         'tarif_km_luar_provinsi',
@@ -32,5 +33,10 @@ class AmbulanceType extends Model
     public function ambulanceVehicle()
     {
         return $this->belongsTo(AmbulanceVehicle::class, 'ambulance_vehicles_id', 'id');
+    }
+
+    public function tarifs() 
+    {
+        return $this->hasMany(AmbulanceTarif::class, 'ambulance_types_id');
     }
 }

@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\PermissionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ChatController;
 use App\Http\Controllers\Admin\ProviderController;
+use App\Http\Controllers\Admin\AffiliatorController;
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -52,6 +53,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     // Provider
     Route::resource('providers', ProviderController::class);
+    Route::resource('affiliators', AffiliatorController::class);
     
     // Ambulance Vehicles Management
     Route::resource('ambulance-vehicles', \App\Http\Controllers\Admin\AmbulanceVehicleController::class);

@@ -17,12 +17,12 @@ return new class extends Migration
             $table->string('name');
             $table->string('phone_number');
             $table->string('email');
-            $table->integer('province_id');
-            $table->integer('city_id');
-            $table->integer('district_id');
-            $table->integer('villages_id');
+            $table->char('province_code');
+            $table->char('city_code');
+            $table->char('district_code');
+            $table->char('village_code');
             $table->text('full_address');
-            $table->boolean('is_active');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

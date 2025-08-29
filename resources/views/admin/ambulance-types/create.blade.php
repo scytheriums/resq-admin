@@ -34,42 +34,36 @@
                         @enderror
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label for="tarif_dalam_kota" class="form-label">Tarif Dalam Kota</label>
-                        <div class="input-group">
-                            <span class="input-group-text">Rp</span>
-                            <input type="number" class="form-control @error('tarif_dalam_kota') is-invalid @enderror" 
-                                id="tarif_dalam_kota" name="tarif_dalam_kota" 
-                                value="{{ old('tarif_dalam_kota') }}" placeholder="Masukkan tarif dalam kota" required min="0">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5>Tarif Berdasarkan Jarak</h5>
+                        <div id="tarifContainer">
+                            <div class="tarif-row row g-3 mb-3">
+                                <div class="col-md-3">
+                                    <label class="form-label">Jarak Minimal (KM)</label>
+                                    <input type="number" name="tarifs[0][min_distance]" class="form-control" min="0" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">Jarak Maksimal (KM)</label>
+                                    <input type="number" name="tarifs[0][max_distance]" class="form-control" min="0" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Tarif (Rp)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">Rp</span>
+                                        <input type="number" name="tarifs[0][tarif]" class="form-control" min="0" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 d-flex align-items-end">
+                                    <button type="button" class="btn btn-sm btn-danger btn-remove-tarif">
+                                        <i class="ti ti-x ti-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        @error('tarif_dalam_kota')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="tarif_km_luar_kota" class="form-label">Tarif /KM Luar Kota</label>
-                        <div class="input-group">
-                            <span class="input-group-text">Rp</span>
-                            <input type="number" class="form-control @error('tarif_km_luar_kota') is-invalid @enderror" 
-                                id="tarif_km_luar_kota" name="tarif_km_luar_kota" 
-                                value="{{ old('tarif_km_luar_kota') }}" placeholder="Masukkan tarif per KM luar kota" required min="0">
-                        </div>
-                        @error('tarif_km_luar_kota')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="tarif_km_luar_provinsi" class="form-label">Tarif /KM Luar Provinsi</label>
-                        <div class="input-group">
-                            <span class="input-group-text">Rp</span>
-                            <input type="number" class="form-control @error('tarif_km_luar_provinsi') is-invalid @enderror" 
-                                id="tarif_km_luar_provinsi" name="tarif_km_luar_provinsi" 
-                                value="{{ old('tarif_km_luar_provinsi') }}" placeholder="Masukkan tarif per KM luar provinsi" required min="0">
-                        </div>
-                        @error('tarif_km_luar_provinsi')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <button type="button" class="btn btn-primary btn-sm mt-2" id="addTarif">
+                            <i class="bx bx-plus"></i> Tambah Tarif
+                        </button>
                     </div>
                 </div>
                 <div class="row">
@@ -113,6 +107,50 @@
                 allowClear: true,
                 multiple: true
             });
+
+            // Add new tarif row
+            let tarifIndex = 1;
+            $('#addTarif').click(function() {
+                const newRow = `
+                    <div class="tarif-row row g-3 mb-3">
+                        <div class="col-md-3">
+                            <input type="number" name="tarifs[${tarifIndex}][min_distance]" class="form-control" min="0" required>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="number" name="tarifs[${tarifIndex}][max_distance]" class="form-control" min="0" required>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="number" name="tarifs[${tarifIndex}][tarif]" class="form-control" min="0" required>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-sm btn-danger btn-remove-tarif">
+                                <i class="ti ti-x ti-sm"></i>
+                            </button>
+                        </div>
+                    </div>`;
+                
+                $('#tarifContainer').append(newRow);
+                tarifIndex++;
+                updateRemoveButtons();
+            });
+
+            // Remove tarif row
+            $(document).on('click', '.btn-remove-tarif', function() {
+                $(this).closest('.tarif-row').remove();
+                updateRemoveButtons();
+            });
+
+            // Show/hide remove button based on number of rows
+            function updateRemoveButtons() {
+                const $rows = $('.tarif-row');
+                $('.btn-remove-tarif').toggle($rows.length > 1);
+            }
+
+            // Initialize with one row
+            updateRemoveButtons();
         });
     </script>
 @endpush

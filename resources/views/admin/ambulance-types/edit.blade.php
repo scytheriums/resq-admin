@@ -20,60 +20,77 @@
                 @method('PUT')
                 <div class="row">
                     <div class="col-md-12 mb-3">
-                        <label for="ambulance_vehicles_id" class="form-label">Kendaraan Ambulance</label>
-                        <select class="form-select select2 @error('ambulance_vehicles_id') is-invalid @enderror" 
-                            id="ambulance_vehicles_id" name="ambulance_vehicles_id" required>
+                        <label for="vehicle_id" class="form-label">Kendaraan Ambulance</label>
+                        <select class="form-select select2 @error('vehicle_id') is-invalid @enderror" 
+                            id="vehicle_id" name="vehicle_id" required>
                             <option value="">Pilih Kendaraan Ambulance</option>
                             @foreach($ambulanceVehicles as $vehicle)
-                                <option value="{{ $vehicle->id }}" {{ old('ambulance_vehicles_id', $ambulanceType->ambulance_vehicles_id) == $vehicle->id ? 'selected' : '' }}>
+                                <option value="{{ $vehicle->id }}" {{ old('vehicle_id', $ambulanceType->ambulance_vehicles_id) == $vehicle->id ? 'selected' : '' }}>
                                     {{ $vehicle->vehicle_name }}
                                 </option>
                             @endforeach
                         </select>
-                        @error('ambulance_vehicles_id')
+                        @error('vehicle_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label for="tarif_dalam_kota" class="form-label">Tarif Dalam Kota</label>
-                        <div class="input-group">
-                            <span class="input-group-text">Rp</span>
-                            <input type="number" class="form-control @error('tarif_dalam_kota') is-invalid @enderror" 
-                                id="tarif_dalam_kota" name="tarif_dalam_kota" 
-                                value="{{ old('tarif_dalam_kota', $ambulanceType->tarif_dalam_kota) }}" 
-                                placeholder="Masukkan tarif dalam kota" required min="0">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5>Tarif Berdasarkan Jarak</h5>
+                        <div id="tarifContainer">
+                            @php
+                                $tarifs = old('tarifs') ?? $ambulanceType->tarifs->toArray();
+                                if (empty($tarifs)) {
+                                    $tarifs = [['min_distance' => '', 'max_distance' => '', 'tarif' => '']];
+                                }
+                            @endphp
+                            @foreach($tarifs as $index => $tarif)
+                                <div class="tarif-row row g-3 mb-3">
+                                    <div class="col-md-3">
+                                        <label class="form-label">Jarak Minimal (KM)</label>
+                                        <input type="number" name="tarifs[{{ $index }}][min_distance]" 
+                                            class="form-control @error('tarifs.' . $index . '.min_distance') is-invalid @enderror" 
+                                            value="{{ old('tarifs.' . $index . '.min_distance', $tarif['min_distance'] ?? '') }}" 
+                                            min="0" required>
+                                        @error('tarifs.' . $index . '.min_distance')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Jarak Maksimal (KM)</label>
+                                        <input type="number" name="tarifs[{{ $index }}][max_distance]" 
+                                            class="form-control @error('tarifs.' . $index . '.max_distance') is-invalid @enderror" 
+                                            value="{{ old('tarifs.' . $index . '.max_distance', $tarif['max_distance'] ?? '') }}" 
+                                            min="0" required>
+                                        @error('tarifs.' . $index . '.max_distance')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label">Tarif (Rp)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">Rp</span>
+                                            <input type="number" name="tarifs[{{ $index }}][tarif]" 
+                                                class="form-control @error('tarifs.' . $index . '.tarif') is-invalid @enderror" 
+                                                value="{{ old('tarifs.' . $index . '.tarif', $tarif['tarif'] ?? '') }}" 
+                                                min="0" required>
+                                            @error('tarifs.' . $index . '.tarif')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 d-flex align-items-end">
+                                        <button type="button" class="btn btn-sm btn-danger btn-remove-tarif" @if($loop->first) style="display: none;" @endif>
+                                            <i class="ti ti-x ti-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
-                        @error('tarif_dalam_kota')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="tarif_km_luar_kota" class="form-label">Tarif /KM Luar Kota</label>
-                        <div class="input-group">
-                            <span class="input-group-text">Rp</span>
-                            <input type="number" class="form-control @error('tarif_km_luar_kota') is-invalid @enderror" 
-                                id="tarif_km_luar_kota" name="tarif_km_luar_kota" 
-                                value="{{ old('tarif_km_luar_kota', $ambulanceType->tarif_km_luar_kota) }}" 
-                                placeholder="Masukkan tarif per KM luar kota" required min="0">
-                        </div>
-                        @error('tarif_km_luar_kota')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="tarif_km_luar_provinsi" class="form-label">Tarif /KM Luar Provinsi</label>
-                        <div class="input-group">
-                            <span class="input-group-text">Rp</span>
-                            <input type="number" class="form-control @error('tarif_km_luar_provinsi') is-invalid @enderror" 
-                                id="tarif_km_luar_provinsi" name="tarif_km_luar_provinsi" 
-                                value="{{ old('tarif_km_luar_provinsi', $ambulanceType->tarif_km_luar_provinsi) }}" 
-                                placeholder="Masukkan tarif per KM luar provinsi" required min="0">
-                        </div>
-                        @error('tarif_km_luar_provinsi')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <button type="button" class="btn btn-primary btn-sm mt-2" id="addTarif">
+                            <i class="bx bx-plus"></i> Tambah Tarif
+                        </button>
                     </div>
                 </div>
                 <div class="row">
@@ -119,6 +136,50 @@
                 allowClear: true,
                 multiple: true
             });
+
+            // Add new tarif row
+            let tarifIndex = {{ count(old('tarifs', $ambulanceType->tarifs)) }};
+            $('#addTarif').click(function() {
+                const newRow = `
+                    <div class="tarif-row row g-3 mb-3">
+                        <div class="col-md-3">
+                            <input type="number" name="tarifs[${tarifIndex}][min_distance]" class="form-control" min="0" required>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="number" name="tarifs[${tarifIndex}][max_distance]" class="form-control" min="0" required>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="number" name="tarifs[${tarifIndex}][tarif]" class="form-control" min="0" required>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-sm btn-danger btn-remove-tarif">
+                                <i class="ti ti-x ti-sm"></i>
+                            </button>
+                        </div>
+                    </div>`;
+                
+                $('#tarifContainer').append(newRow);
+                tarifIndex++;
+                updateRemoveButtons();
+            });
+
+            // Remove tarif row
+            $(document).on('click', '.btn-remove-tarif', function() {
+                $(this).closest('.tarif-row').remove();
+                updateRemoveButtons();
+            });
+
+            // Show/hide remove button based on number of rows
+            function updateRemoveButtons() {
+                const $rows = $('.tarif-row');
+                $('.btn-remove-tarif').toggle($rows.length > 1);
+            }
+
+            // Initialize with one row
+            updateRemoveButtons();
         });
     </script>
 @endpush
