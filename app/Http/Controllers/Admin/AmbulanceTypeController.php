@@ -97,13 +97,14 @@ class AmbulanceTypeController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'vehicle_id' => 'required|exists:ambulance_vehicles,id',
+            'ambulance_vehicles_id' => 'required|exists:ambulance_vehicles,id',
             'tarifs' => 'required|array|min:1',
             'tarifs.*.min_distance' => 'required|numeric|min:0',
             'tarifs.*.max_distance' => 'required|numeric|min:0|gte:tarifs.*.min_distance',
             'tarifs.*.tarif' => 'required|numeric|min:0',
             'free_tarif_for_purpose' => 'nullable|array',
-            'free_tarif_for_purpose.*' => 'exists:purposes,id'
+            'free_tarif_for_purpose.*' => 'exists:purposes,id',
+            'tarif_minimum' => 'required|numeric',
         ]);
 
         // Start database transaction
@@ -116,7 +117,8 @@ class AmbulanceTypeController extends Controller
                 'tarif_dalam_kota' => 0,
                 'tarif_km_luar_kota' => 0,
                 'tarif_km_luar_provinsi' => 0,
-                'provider_id' => Provider::first()->id
+                'provider_id' => Provider::first()->id,
+                'tarif' => $validated['tarif_minimum'],
             ]);
             
             $ambulanceType->save();
