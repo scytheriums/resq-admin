@@ -40,7 +40,7 @@
                         <label class="form-label">Tarif Minimum</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
-                            <input type="number" id="tarif_minimum" class="form-control" min="0" required>
+                            <input type="number" id="tarif_minimum" name="tarif_minimum" class="form-control" min="0" required>
                         </div>
                     </div>
                     <!-- Kanan: Tarif per KM -->
@@ -48,7 +48,7 @@
                         <label class="form-label">Tarif / KM</label>
                         <div class="input-group">
                             <span class="input-group-text">Rp</span>
-                            <input type="number" id="tarif_per_km" class="form-control" min="0" required>
+                            <input type="number" id="tarif_per_km" name="tarif_per_km" class="form-control" min="0" required>
                         </div>
                     </div>
                 </div>
@@ -140,7 +140,7 @@
                                     <input type="number" name="tarifs[${tarifIndex}][tarif]" class="form-control bg-light" value="${tarifPerKm}" min="0" required readonly>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-1">
                                 <label class="form-label">&nbsp;&nbsp;</label>
                                 <button type="button" class="btn btn-sm btn-outline-secondary w-100" disabled title="Tier pertama tidak dapat dihapus">
                                     <i class="ti ti-lock ti-sm"></i>
@@ -247,7 +247,7 @@
                                 <input type="number" name="tarifs[${tarifIndex}][tarif]" class="form-control" min="0" required>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                             <label class="form-label">&nbsp;&nbsp;</label>
                             <button type="button" class="btn btn-sm btn-danger btn-remove-tarif w-100" title="Hapus tier ini">
                                 <i class="ti ti-x ti-sm"></i>

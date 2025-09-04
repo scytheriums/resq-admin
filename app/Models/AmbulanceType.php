@@ -16,6 +16,9 @@ class AmbulanceType extends Model
         'tarif_km_luar_provinsi',
         'free_tarif_for_purpose',
         'ambulance_vehicles_id',
+        'vehicle_id',
+        'tarif_minimum',
+        'tarif_per_km'
     ];
 
     protected $casts = [
@@ -33,6 +36,11 @@ class AmbulanceType extends Model
     public function ambulanceVehicle()
     {
         return $this->belongsTo(AmbulanceVehicle::class, 'ambulance_vehicles_id', 'id');
+    }
+
+    public function vehicle()
+    {
+        return $this->belongsTo(AmbulanceVehicle::class, 'vehicle_id', 'id');
     }
 
     public function tarifs() 

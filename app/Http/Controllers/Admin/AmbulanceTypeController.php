@@ -97,7 +97,7 @@ class AmbulanceTypeController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'ambulance_vehicles_id' => 'required|exists:ambulance_vehicles,id',
+            'vehicle_id' => 'required|exists:ambulance_vehicles,id',
             'tarifs' => 'required|array|min:1',
             'tarifs.*.min_distance' => 'required|numeric|min:0',
             'tarifs.*.max_distance' => 'required|numeric|min:0|gte:tarifs.*.min_distance',
@@ -108,17 +108,19 @@ class AmbulanceTypeController extends Controller
         ]);
 
         // Start database transaction
-        return DB::transaction(function () use ($validated) {
+        return DB::transaction(function () use ($validated, $request) {
             // Create the ambulance type
             $ambulanceType = new AmbulanceType([
                 'vehicle_id' => $validated['vehicle_id'],
+                'ambulance_vehicles_id' => $validated['vehicle_id'],
                 'name' => AmbulanceVehicle::find($validated['vehicle_id'])->vehicle_name,
                 'free_tarif_for_purpose' => $validated['free_tarif_for_purpose'] ?? null,
                 'tarif_dalam_kota' => 0,
                 'tarif_km_luar_kota' => 0,
                 'tarif_km_luar_provinsi' => 0,
                 'provider_id' => Provider::first()->id,
-                'tarif' => $validated['tarif_minimum'],
+                'tarif_minimum' => $validated['tarif_minimum'],
+                'tarif_per_km' => $request->tarif_per_km,
             ]);
             
             $ambulanceType->save();
@@ -155,7 +157,8 @@ class AmbulanceTypeController extends Controller
             'tarifs.*.max_distance' => 'required|numeric|min:0|gte:tarifs.*.min_distance',
             'tarifs.*.tarif' => 'required|numeric|min:0',
             'free_tarif_for_purpose' => 'nullable|array',
-            'free_tarif_for_purpose.*' => 'exists:purposes,id'
+            'free_tarif_for_purpose.*' => 'exists:purposes,id',
+            'tarif_minimum' => 'required|numeric',
         ]);
 
         // Start database transaction
@@ -163,6 +166,7 @@ class AmbulanceTypeController extends Controller
             // Update the ambulance type
             $ambulanceType->update([
                 'vehicle_id' => $validated['vehicle_id'],
+                'tarif_minimum' => $validated['tarif_minimum'],
                 'name' => AmbulanceVehicle::find($validated['vehicle_id'])->vehicle_name,
                 'free_tarif_for_purpose' => $validated['free_tarif_for_purpose'] ?? null
             ]);
