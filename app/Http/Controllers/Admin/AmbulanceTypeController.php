@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\AmbulanceType;
 use App\Models\Provider;
 use App\Models\Purpose;
+use App\Models\Driver;
 use App\Models\AmbulanceVehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -185,6 +186,7 @@ class AmbulanceTypeController extends Controller
 
     public function destroy(AmbulanceType $ambulanceType)
     {
+        Driver::where('ambulance_type_id', $ambulanceType->id)->update(['ambulance_type_id' => null]);
         $ambulanceType->delete();
         return redirect()->route('admin.ambulance-types.index')->with('success', 'Ambulance Type deleted successfully');
     }
