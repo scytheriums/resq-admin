@@ -186,8 +186,17 @@ class AmbulanceTypeController extends Controller
 
     public function destroy(AmbulanceType $ambulanceType)
     {
-        Driver::where('ambulance_type_id', $ambulanceType->id)->update(['ambulance_type_id' => null]);
-        $ambulanceType->delete();
-        return redirect()->route('admin.ambulance-types.index')->with('success', 'Ambulance Type deleted successfully');
+        try {
+            DB::transaction(function () use ($ambulanceType) {
+                Driver::where('ambulance_type_id', $ambulanceType->id)->update(['ambulance_type_id' => null]);
+                $ambulanceType->delete();
+            });
+
+            return redirect()->route('admin.ambulance-types.index')->with('success', 'Ambulance Type deleted successfully');
+        } catch (\Exception $e) {
+            // Log the error for debugging purposes
+            // Log::error('Failed to delete ambulance type: ' . $e->getMessage());
+            return redirect()->route('admin.ambulance-types.index')->with('error', 'Failed to delete Ambulance Type. It might be in use.');
+        }
     }
 }
