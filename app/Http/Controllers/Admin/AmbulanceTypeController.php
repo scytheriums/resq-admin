@@ -119,7 +119,7 @@ class AmbulanceTypeController extends Controller
                 'tarif_km_luar_kota' => 0,
                 'tarif_km_luar_provinsi' => 0,
                 'provider_id' => Provider::first()->id,
-                'tarif_minimum' => $validated['tarif_minimum'],
+                'tarif' => $validated['tarif_minimum'],
                 'tarif_per_km' => $request->tarif_per_km,
             ]);
             
@@ -166,7 +166,7 @@ class AmbulanceTypeController extends Controller
             // Update the ambulance type
             $ambulanceType->update([
                 'vehicle_id' => $validated['vehicle_id'],
-                'tarif_minimum' => $validated['tarif_minimum'],
+                'tarif' => $validated['tarif_minimum'],
                 'name' => AmbulanceVehicle::find($validated['vehicle_id'])->vehicle_name,
                 'free_tarif_for_purpose' => $validated['free_tarif_for_purpose'] ?? null
             ]);
