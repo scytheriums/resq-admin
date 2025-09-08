@@ -63,8 +63,8 @@ class AmbulanceTypeController extends Controller
                     $html = '';
                     if($data->free_tarif_for_purpose && count($data->free_tarif_for_purpose)) {
                         $gratis = '';
-                        foreach($purposes as $purpose) {
-                            $gratis .= '<span class="badge bg-success d-block" style="margin-top: 5px;">'.$purpose.'</span>';
+                        foreach($data->free_tarif_for_purpose as $purpose) {
+                            if(isset($purposes[$purpose])) $gratis .= '<span class="badge bg-success d-block" style="margin-top: 5px;">'.$purposes[$purpose].'</span>';
                         }
                         $html .= '<div class="d-block">'.$gratis.'</div>';
                     } else {
